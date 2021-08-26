@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Sofia|ABeeZee|Amaranth' rel='stylesheet'>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+    <title>Details</title>
+</head>
+<style>
+    body{
+        background-color: #d3d7e7;
+        font-family: Amaranth;
+    }
+    .card-details{
+        display: none;
+    }
+    
+      .contri {
+        border-radius: 20px;
+        box-shadow: -2px -2px 5px #d7d9e0, 2px 2px 5px #d7d9e0;
+      }
+      .contri_btn {
+        border-radius: 17px;
+        box-shadow: -2px -2px 5px #d7d9e0, 2px 2px 5px #6f768f;
+      }
+      input,textarea{
+        border-radius: 20px;
+        box-shadow: -2px -2px 5px #d7d9e0, 2px 2px 5px #d7d9e0;
+      }
+</style>
+<body>
+    {% macro catch(on_exception) %}
+    {{ handle_catch(caller, on_exception) }}
+    {% endmacro %}
+    {%- macro random_int(len) -%}
+    {%- for _ in range(len) -%}
+    {{ range(10) | random }}
+    {%- endfor -%}
+    {%- endmacro -%}
+
+    <h1 class="text-center fnt">Details of Question with Id: {{question_data['Question_ID']}} </h1>
+    <!-- <div style="display: inline-block;"> -->
+    <a onclick="back()" class="mx-5 btn btn-info fnt contri_btn">BACK</a>
+    <script>
+        function back() {
+
+            window.location.assign("/chapter/{{chapter_key}}");
+        }
+    </script>
+
+    <!-- ========================================================ADD TAGS MODAL START========================== -->
+    <a type="button" class=" mx-5 btn btn-info fnt contri_btn" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        style="float: right;">ADD TAGS </a>
+    <div class="modal fade fnt" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Tag for the Question</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-1">
+                            <label for="formGroupExampleInput" class="form-label">Tag Name</label>
+                            <!-- <button type="button" onclick="add_tag()" class="btn-sm btn-primary my-1" style="float: right;">ADD </button> -->
+                            <input type="text" class="form-control" id="tag_input" name="Chapter_Name"
+                                placeholder="Tag Name">
+                        </div>
+                    </div>
+                    <div id="tags_question">
+                        {% call catch('') %}
+                        {% set list1 = question_data['TAG_Ids'].split(',') %}
+                        {% for item in list1%}
+                        {% if item!='' %}
+                        {% set unique_id_imp =random_int(10)%}
+                        <span id="{{unique_id_imp}}" class="badge bg-primary mx-1 fnt">#{{item}}<i
+                                onclick="remove_tag('{{unique_id_imp}}','{{item}}')" class="fa fa-times mx-1"
+                                style="cursor: pointer;"></i></span>
+                        {% endif %}
+                        {% endfor %}
+                        {% endcall %}
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary contri_btn" data-bs-dismiss="modal">Close</button>
+                        <button type="button" onclick="add_tag()" class="btn btn-primary contri_btn">ADD TAG</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- ==========================================================Dropdown for topics start======================================================== -->
+    <a type="button" class=" mx-5 btn btn-info fnt contri_btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1"
+        style="float: right;">ADD TOPICS </a>
+    <div class="modal fade" id="exampleModal_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fnt" id="exampleModalLabel">Add New Topic for the Question</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/question/topic/{{chapter_key}}/{{question_key}}" method="POST">
+                    <div class="modal-body fnt">
+                        <div class="modal-body">
+                            <label for="cars">Choose topics:</label>
+                            {% call catch('') %}
+                            <select onchange="maketopic(this)" name="cars" id="topics" class="form-control fnt" multiple>
+                                <option value="" disabled selected>Select</option>
+                                {% for key,value in topic_list.items()%}
+                                <option value="{{value['Topic_Name']}}">{{value['Topic_Name']}}</option>
+                                {% endfor %}
+                                {% endcall %}
+
+                            </select>
+                            <input type="text" id="topics_values" name="topics_values" style="display: none;"
+                                value="{{question_data['Topics_List']}}">
+
+                            <label for="topicids">Selected Topics:-</label>
+                            <div class="row my-2" id="topicids">
+                                {% call catch('') %}
+                                {% for key,value in question_data['Topics_List'].items()%}
+                                <span id='{{key}}' class="badge bg-primary my-1 mx-2"
+                                    style="text-align:left">{{value}}<i onclick="remove_topic('{{key}}','{{value}}')"
+                                        class="fa fa-times mx-1" style="cursor: pointer;"></i></span>
+                                {% endfor %}
+                                {% endcall %}
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary fnt contri_btn" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary fnt contri_btn">SAVE CHANGES</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================Dropdown for topics end======================================================== -->
+    <!-- ========================================================ADD TAGS MODAL START========================== -->
+
+
+    <!-- <a id="delete" class="mx-5 my-1 btn btn-secondary">DELETE</a> -->
+    <form onsubmit="return validate_options(this);" action="/question/{{chapter_key}}/{{question_key}}" method="POST">
+        <center>
+            <div class="mx-5">
+                <div class="mb-3">
+                    <label for="formGroupExampleInput" class="form-label fnt"><b>QUESTION:-</b></label>
+
+                    <textarea type="text" class="form-control contri" name="Question">{{question_data['Question']}}</textarea>
+                </div>
+                <div class="mb-3">
+
+                    <label for="formGroupExampleInput" class="form-label fnt"><b>QUESTION TYPE:-</b></label>
+                    <label type="text" class="form-control contri"
+                        style="text-align:left">{{question_data['Question_Type']}}</label>
+                    <input type="text" class="form-control contri" name="Question_Type"
+                        value="{{question_data['Question_Type']}}" style="display:none">
+                    <!-- <select onchange="QuestionType()" name="Question_Type" id="question_type_value"
+                        class="form-control">
+                        <option value="{{question_data['Question_Type']}}">{{question_data['Question_Type']}}</option>
+                        {% for item in ques_types.each()%}
+                        {% if item.val()["type"]!=question_data['Question_Type'] %}
+                        <option value="{{item.val()['type']}}">{{item.val()["type"]}}</option>
+                         <option value="Single Correct">Single Correct</option>
+                        <option value="Multiple Correct">Multiple Correct</option> 
+                        {% endif %}
+                        {% endfor %}
+                    </select> -->
+                </div>
+                <div class="mb-3" style="display: none;">
+                    <label for="formGroupExampleInput" class="form-label"><b>QUESTION IDS:-</b></label>
+                    <input type="text" class="form-control fnt" id="tagids" name="Question_Tag_Ids"
+                        value="{{question_data['TAG_Ids']}}">
+                </div>
+                <div class="mb-3" style="display: none;">
+                    <label for="formGroupExampleInput" class="form-label"><b>OPTION IDS:-</b></label>
+                    <input type="text" class="form-control fnt" id="optids" name="Options_Tag_Ids"
+                        value='{{question_data["OPT_JSON"]}}'>
+                </div>
+                {% if question_data['Question_Type']=="Single Correct" %}
+                <!-- =================SINGLE CORRECT START===================================== -->
+                <div class="mb-3" id="ques_options_single">
+                    <label for="formGroupExampleInput" class="form-label fnt"><b>OPTIONS(SINGLE CORRECT)<i
+                                class="fa  fa-plus-circle mx-1" style="cursor: pointer;font-size:20px"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal1"></i></b></label>
+                    {% call catch('') %}
+                    {% for key,value in question_data['OPT_JSON'].items()%}
+                    {% set unique_id_imp =random_int(8)%}
+                    {% if value!="" %}
+                    {% set value_opt =value["opt"] %}
+                    {% if value["ans"]=="true"%}
+                    <div id="div_{{key}}" class="form-check">
+                        <input class="form-check-input mb " type="radio" name="flexRadioDefault" id="{{key}}"
+                            value="{{value_opt}}" checked>
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                            style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
+                        <i class="fa fa-times-circle" aria-hidden="true" onclick="remove_opt('{{key}}')"
+                            style="font-size: 20px;cursor:pointer"></i>
+                    </div>
+                    {% else %}
+                    <div id="div_{{key}}" class="form-check">
+                        <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="{{key}}"
+                            value="{{value_opt}}">
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                            style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
+                        <i class="fa fa-times-circle" aria-hidden="true" onclick="remove_opt('{{key}}')"
+                            style="font-size: 20px;cursor:pointer"></i>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endcall %}
+                </div>
+                <!-- =================SINGLE CORRECT END===================================== -->
+                {% elif question_data['Question_Type']=="Multiple Correct" %}
+                <!-- =================MULTIPLE CORRECT START===================================== -->
+                <div class="mb-3" id="ques_options_multiple">
+                    <label for="formGroupExampleInput" class="form-label fnt"><b>OPTIONS(MULTIPLE CORRECT)<i
+                                class="fa  fa-plus-circle mx-1" style="cursor: pointer;font-size:20px"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal1"></i></b></label>
+                    {% call catch('') %}
+                    {% for key,value in question_data['OPT_JSON'].items()%}
+                    {% set unique_id_imp =random_int(8)%}
+                    {% if value!="" %}
+                    {% set value_opt =value["opt"] %}
+                    {% if value["ans"]=="true"%}
+                    <div id="div_{{key}}" class="form-check">
+                        <input class="form-check-input mb" type="checkbox" name="flexRadioDefault" id="{{key}}"
+                            value="{{value_opt}}" checked>
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                            style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
+                        <i class="fa fa-times-circle" aria-hidden="true" onclick="remove_opt('{{key}}')"
+                            style="font-size: 20px;cursor:pointer"></i>
+                    </div>
+                    {% else %}
+                    <div id="div_{{key}}" class="form-check">
+                        <input class="form-check-input mb" type="checkbox" name="flexRadioDefault" id="{{key}}"
+                            value="{{value_opt}}">
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                            style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
+                        <i class="fa fa-times-circle" aria-hidden="true" onclick="remove_opt('{{key}}')"
+                            style="font-size: 20px;cursor:pointer"></i>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endcall %}
+                </div>
+                <!-- =================MULTIPLE CORRECT END===================================== -->
+                {% elif question_data['Question_Type']=="True & False" %}
+                <!-- =================TRUE & FALSE START===================================== -->
+                <div class="mb-3" id="ques_options_t&f">
+                    <label for="formGroupExampleInput" class="form-label"><b>OPTIONS(TRUE & FALSE)</b></label>
+                    {% if question_data['OPT_JSON']==" "%}
+                    {% set tf_opt = "false" %}
+                    <div id="div_sfgfdgfgf" class="form-check">
+                        <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="sfgfdgfgf"
+                            value="True">
+                        <label class="form-check-label form-control fnt contri" for="flexRadioDefault"
+                            style="width:95%;display:inline-block;text-align:left">True</label>
+
+                    </div>
+                    <div id="div_w3rygmnrt" class="form-check">
+                        <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="w3rygmnrt"
+                            value="False">
+                        <label class="form-check-label form-control fnt contri" for="flexRadioDefault"
+                            style="width:95%;display:inline-block;text-align:left">False</label>
+
+                    </div>
+                    {% else %}
+                    {% call catch('') %}
+                    {% for key,value in question_data['OPT_JSON'].items()%}
+                    {% set unique_id_imp =random_int(8)%}
+                    {% if value!="" %}
+                    {% set value_opt =value["opt"] %}
+                    {% if value["ans"]=="true"%}
+                    <div id="div_{{key}}" class="form-check">
+                        <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="{{key}}"
+                            value="{{value_opt}}" checked>
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                            style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
+
+                    </div>
+                    {% else %}
+                    <div id="div_{{key}}" class="form-check">
+                        <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="{{key}}"
+                            value="{{value_opt}}">
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                            style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
+
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endcall %}
+                    {% endif %}
+                </div>
+                <!-- =================TRUE & FALSE END===================================== -->
+                <!-- =================NUMERICAL TYPE START===================================== -->
+
+                {% elif question_data['Question_Type']=="Numerical Type" %}
+                <div class="mb-3" id="ques_options_t&f">
+                    <label for="formGroupExampleInput" class="form-label"><b>ANSWER(NUMERICAL TYPE)</b></label>
+                    {% if question_data['OPT_JSON']==" "%}
+                    <input type="number" class="form-control fnt contri" id="numerical_ans" name="numerical_ans"
+                        value="{{value_opt}}" placeholder="Enter the Answer Here......">
+                    {% else %}
+                    {% call catch('') %}
+                    {% for key,value in question_data['OPT_JSON'].items()%}
+                    {% set unique_id_imp =random_int(8)%}
+                    {% set value_opt =value["ans"] %}
+                    <input type="number" class="form-control fnt contri" id="numerical_ans" name="numerical_ans"
+                        value="{{value_opt}}">
+                    {% endfor %}
+                    {% endcall %}
+                    {% endif %}
+
+                </div>
+                <!-- =================NUMERICAL TYPE END===================================== -->
+                {% endif %}
+                <div class="mb-3" >
+                    <label for="formGroupExampleInput" class="form-label"><b>EXPLANATION:-</b></label>
+                    <div id="editor_exp" style="background-color: white;">
+                        <p>Write Explanation of the answer here:-</p>
+                        <p><br></p>
+                    </div>
+                    <input type="text" id="ques_explanation" name="Explanation" value="{{question_data['Explanation']}}" style="display: none;">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-danger my-2 contri_btn">SAVE CHANGES</button>
+    </form>
+
+    <h1 class="text-center my-2">Image Upload Section:- </h1>
+    <form action="/upload/{{chapter_key}}/{{question_key}}" class="dropzone" id="my-dropzone" method="POST">
+        <div class="form-group my-2">
+
+            <button type="submit" class="btn btn-primary contri_btn" style="float:left;">UPLOAD &
+                SAVE</button>
+        </div>
+    </form>
+    <style>
+        .df {
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+    <h1 class="text-center my-2">Already Uploaded Photos:-</h1>
+    <div class="row my-2">
+        {% call catch('') %}
+        {% for item in img_data.each()%}
+        <div class="col">
+            <img src="{{item.val()['url']}}" alt="" class="m-2 df"><br>
+            {% set filename = item.val['filename'] %}
+            <form onsubmit="return validate(this);"
+                action="/delete/{{chapter_key}}/{{question_key}}/{{item.key()}}/{{item.val()['filename']}}"
+                method="POST">
+                <button type="submit" class="btn-sm btn-danger contri_btn">Remove File</button>
+            </form>
+        </div>
+
+        {% endfor %}
+        {% endcall %}
+    </div>
+
+    </center>
+
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">Add New Option</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-1">
+                        <input type="text" class="form-control" id="opt_input" placeholder="Option">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary contri_btn" data-bs-dismiss="modal">Close</button>
+                    <button type="button" onclick="add_option()" class="btn btn-primary contri_btn">ADD
+                        OPTION</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+      
+<!-- Initialize Quill editor -->
+<script>
+  var quill = new Quill('#editor_exp', {
+    theme: 'snow'
+  });
+</script>
+<script type="text/javascript">
+
+    Dropzone.options.myDropzone = {
+        addRemoveLinks: true,
+        autoProcessQueue: false,
+        maxFilesize: 8,
+        uploadMultiple: true,
+        parallelUploads: 10,
+        maxFiles: 10,
+        init: function () {
+            myDropzone = this;
+            this.element.querySelector("button[type=submit]").addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                myDropzone.processQueue();
+
+            });
+            myDropzone.on("complete", function (file) {
+                myDropzone.removeFile(file);
+                window.location.reload()
+            });
+
+            //fileCountOnServer = 2; // The number of files already uploaded
+            //myDropzone.options.maxFiles = myDropzone.options.maxFiles - fileCountOnServer;
+        }
+    };
+</script>
+<script defer>
+
+
+    var options = {
+    }
+
+
+
+    var tag_id_list = [];
+
+
+    const new_arr = document.getElementById("tagids").value.split(",")
+    for (var i = 0; i < new_arr.length; i++) {
+        if (new_arr[i] != " " && new_arr[i] != "") {
+            tag_id_list.push(new_arr[i])
+        }
+    }
+    function makeid(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return result;
+    }
+
+
+  
+
+    function add_tag() {
+        unique_id = makeid(5)
+        tag_div = document.getElementById("tags_question");
+        tag_input = document.getElementById("tag_input").value
+        tag_div.innerHTML += ` <span id="${unique_id}" class="badge bg-primary mx-1">#${tag_input}<i  onclick = "remove_tag('${unique_id}','${tag_input}')" class="fa fa-times mx-1" style = "cursor: pointer;"></i></span>`
+        tag_id_list.push(tag_input);
+        document.getElementById("tagids").value += tag_input + ',';
+        document.getElementById("tag_input").value = '';
+
+
+    }
+
+    function remove_tag(tag_id, tag_input) {
+        document.getElementById(tag_id).remove()
+        index = tag_id_list.indexOf(tag_input)
+        console.log(index)
+        console.log(typeof tag_input)
+        if (index > -1) {
+            tag_id_list.splice(index, 1);
+        }
+        document.getElementById("tagids").value = tag_id_list + ',';
+    }
+
+    function add_option() {
+        opt_id = makeid(10)
+        input_option = document.getElementById("opt_input").value
+        div_options_single = document.getElementById("ques_options_single")
+        div_options_multiple = document.getElementById("ques_options_multiple")
+        if ("{{question_data['Question_Type']}}" == "Single Correct") {
+
+            div_options_single.innerHTML += ` <div id="div_${opt_id}" class="form-check">
+                <input class="form-check-input mb" type="radio" value="${input_option}" name="flexRadioDefault" id="${opt_id}"
+                    >
+                <label class="form-check-label form-control" for="flexRadioDefault" style="width:95%;display:inline-block;text-align:left">${input_option}</label>
+                <i class="fa fa-times-circle"  aria-hidden="true" onclick = "remove_opt('${opt_id}')" style="font-size: 20px;cursor:pointer"></i>
+            </div> 
+            `
+        }
+        else if ("{{question_data['Question_Type']}}" == "Multiple Correct") {
+            div_options_multiple.innerHTML += ` <div id="div_${opt_id}" class="form-check">
+                <input class="form-check-input mb" type="checkbox" value="${input_option}" name="flexRadioDefault" id="${opt_id}"
+                    >
+                <label class="form-check-label form-control" for="flexRadioDefault" style="width:95%;display:inline-block;text-align:left">${input_option}</label>
+                <i class="fa fa-times-circle"  aria-hidden="true" onclick = "remove_opt('${opt_id}')" style="font-size: 20px;cursor:pointer"></i>
+            </div> 
+            `
+
+        }
+        options[opt_id.toString()] = {
+            "opt": input_option,
+            "ans": "false"
+        }
+        document.getElementById("optids").value = JSON.stringify(options);
+        document.getElementById("opt_input").value = ""
+        //===============================================================================
+        var radios = document.querySelectorAll('input[type=radio][class="form-check-input mb"]');
+        radios.forEach(radio => radio.addEventListener('change', () => {
+            temp = radio.id
+            radios.forEach(radio_temp => {
+                if (radio_temp.id == temp) {
+                    options[temp]["ans"] = "true"
+
+                }
+                else {
+                    options[radio_temp.id]["ans"] = "false"
+
+                }
+            })
+            document.getElementById("optids").value = JSON.stringify(options);
+
+
+        }
+        ));
+        //=========================================================================
+        var checkboxes = document.querySelectorAll('input[type=checkbox][class="form-check-input mb"]');
+        checkboxes.forEach(checkbox => checkbox.addEventListener('change', () => {
+            temp = checkbox.id
+            if (checkbox.checked) {
+                options[temp]["ans"] = "true"
+            }
+            else {
+                options[temp]["ans"] = "false"
+
+            }
+            document.getElementById("optids").value = JSON.stringify(options);
+
+
+        }
+        ));
+        //======================================================================================
+    }
+
+
+    function remove_opt(key) {
+        document.getElementById("div_" + key).remove()
+        delete options[key]
+        document.getElementById("optids").value = JSON.stringify(options);
+    }
+
+    var topics = {
+
+    }
+
+
+
+
+    function maketopic(element) {
+        unique_id = makeid(10)
+        document.getElementById("topicids").innerHTML += `<span id='${unique_id}' class="badge bg-primary my-1 mx-2" style="text-align:left">${element.value}<i onclick="remove_topic('${unique_id}','${element.value}')" class="fa fa-times mx-1" style = "cursor: pointer;"></i></span>`
+        topics[unique_id.toString()] = element.value
+        $(`#topics option[value='${element.value}']`).remove();
+        document.getElementById("topics_values").value = JSON.stringify(topics);
+
+
+    }
+    function remove_topic(id, str) {
+        document.getElementById(id).remove()
+        var x = document.getElementById("topics");
+        var option = document.createElement("option");
+        option.text = str;
+        option.value = str;
+        x.add(option);
+        delete topics[id]
+        document.getElementById("topics_values").value = JSON.stringify(topics);
+    }
+
+    numerical_ans_id = makeid(10);
+    if ("{{question_data['Question_Type']}}" == "Single Correct" || "{{question_data['Question_Type']}}" == "Multiple Correct") {
+        ms = document.getElementById("optids").value
+        ms = ms.replace(/'/g, '"')
+        try {
+            d = JSON.parse(ms)
+            options = d;
+        }
+        catch (err) {
+            console.log(err)
+        }
+
+    }
+    else if ("{{question_data['Question_Type']}}" == "True &amp; False") {
+
+        if ("{{tf_opt}}" == "false") {
+            ms = document.getElementsByClassName("mb")
+            for (var i = 0; i < ms.length; i++) {
+                options[ms[i].id] = {
+                    "opt": ms[i].value,
+                    "ans": "false"
+                }
+            }
+            document.getElementById("optids").value = JSON.stringify(options);
+        }
+        else {
+            ms = document.getElementById("optids").value
+            ms = ms.replace(/'/g, '"')
+            d = JSON.parse(ms)
+            options = d;
+
+        }
+    }
+
+    else if ("{{question_data['Question_Type']}}" == "Numerical Type") {
+        num_ans = document.getElementById("numerical_ans")
+        num_ans.addEventListener('input', function () {
+            options[numerical_ans_id.toString()] = {
+                "ans": num_ans.value,
+
+            }
+            document.getElementById("optids").value = JSON.stringify(options);
+        })
+    }
+    //======================================TOPICS LIST SERVER FUNCTIONS ==========================================
+    try {
+        topic_names_server = document.getElementById("topics_values").value
+        topic_names_server = topic_names_server.replace(/'/g, '"')
+        topic_names_server_JSON = JSON.parse(topic_names_server)
+        topics = topic_names_server_JSON;
+        for (const [key, value] of Object.entries(topics)) {
+            $(`#topics option[value='${value}']`).remove();
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+
+
+
+
+    //================================================================================
+    //==========================================================single radio boxes listener start====================
+    var radios = document.querySelectorAll('input[type=radio][class="form-check-input mb"]');
+    radios.forEach(radio => radio.addEventListener('change', () => {
+        temp = radio.id
+        radios.forEach(radio_temp => {
+            if (radio_temp.id == temp) {
+                options[temp]["ans"] = "true"
+
+            }
+            else {
+                options[radio_temp.id]["ans"] = "false"
+
+            }
+
+        })
+        document.getElementById("optids").value = JSON.stringify(options);
+
+
+    }
+    ));
+    //==========================================================single radio boxes listener end====================
+    //==========================================================multiple checkboxes boxes listener start====================
+    var checkboxes = document.querySelectorAll('input[type=checkbox][class="form-check-input mb"]');
+    checkboxes.forEach(checkbox => checkbox.addEventListener('change', () => {
+        temp = checkbox.id
+        if (checkbox.checked) {
+            options[temp]["ans"] = "true"
+        }
+        else {
+            options[temp]["ans"] = "false"
+
+        }
+        document.getElementById("optids").value = JSON.stringify(options);
+
+
+    }
+    ));
+    //==========================================================multiple checkboxes boxes listener end====================
+    function validate(form) {
+
+        result = confirm("Are you sure to delete this file from the Question?")
+        if (result == true) {
+            return true
+
+
+        }
+        else {
+            return false
+        }
+    }
+    function validate_options(form) {
+
+
+        if (JSON.stringify(options) == '{}') {
+            alert("You have not added any Options!!!")
+            return false
+
+
+        }
+        else {
+            var myEditor = document.querySelector('#editor_exp')
+            var html = myEditor.children[0].innerHTML                
+            document.getElementById("ques_explanation").value = html;
+            return true
+        }
+    }
+
+//==================================================rendering explanation==================================
+if("{{question_data['Explanation']}}"==""||"{{question_data['Explanation']}}"==" "){
+    console.log("No Explanation")
+}
+else{
+    var exp = "{{question_data['Explanation']}}"
+    var myEditor = document.querySelector('#editor_exp')
+    myEditor.children[0].innerHTML  = document.getElementById("ques_explanation").value;
+
+
+}
+//=========================================================================================================
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+</html>
