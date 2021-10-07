@@ -15,8 +15,13 @@
    <form action="" onsubmit="return mySubmitFunction(event)">
     <input type="text" id="entrybox">
     <button type="submit" onclick = "send()">Send</button>
-   </form>
+</form>
+<input type="file" name="" id="fileId">
+<button type="submit" onclick = "imageUploaded()">Send Pic</button>
 
+
+
+    
   
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js></script>
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js></script>
@@ -38,16 +43,48 @@
             document.getElementById("qqww").innerHTML  = ""
             const data = snapshot.val();
             for (const [key, value] of Object.entries(data)) {
-                document.getElementById("qqww").innerHTML += `<h3>${value['chat']}</h3>`
+                if(value['type']=='img'){
+
+                    document.getElementById("qqww").innerHTML += `<img src="data:image/png;base64,${value['chat']}"  width = 300 height = 300><br>`
+                }
+                else{
+
+                    document.getElementById("qqww").innerHTML += `<h3>${value['chat']}</h3>`
+                }
               }
         })
         function send(){
             let CallClicks_New = firebase.database().ref("Data");
             CallClicks_New.push({
-                   chat:person+': '+document.getElementById('entrybox').value
+                   chat:person+': '+document.getElementById('entrybox').value,
+                   type:'text'
             });
             document.getElementById('entrybox').value = ""
         }
+        function imageUploaded() {
+            var file = document.querySelector(
+                'input[type=file]')['files'][0];
+        
+            var reader = new FileReader();
+
+            
+            reader.onload = function () {
+                base64String = reader.result.replace("data:", "")
+                    .replace(/^.+,/, "");
+        
+                imageBase64Stringsep = base64String;
+        
+                let CallClicks_New = firebase.database().ref("Data");
+                CallClicks_New.push({
+                       chat:base64String,
+                       type:'img'
+                });
+                document.getElementById('fileId').value = ""
+
+                console.log(base64String);
+            }
+            reader.readAsDataURL(file);
+        }    
    function mySubmitFunction(){
        return false
    }
