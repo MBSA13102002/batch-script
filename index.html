@@ -20,6 +20,7 @@
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js></script>
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-analytics.js></script>
     <script>
+        let person = prompt("What is Your Name","M.B.SAI ADITYA")
         var firebaseConfig = {
             apiKey: "AIzaSyDO2W0QCmFCo0a-PTsT7ficA_QLI5e_WHg",
             authDomain: "chat-a7bab.firebaseapp.com",
@@ -35,13 +36,13 @@
             document.getElementById("qqww").innerHTML  = ""
             const data = snapshot.val();
             for (const [key, value] of Object.entries(data)) {
-                document.getElementById("qqww").innerHTML += `<h1>${value['chat']}</h1>`
+                document.getElementById("qqww").innerHTML += `<h3>${value['chat']}</h3>`
               }
         })
         function send(){
             let CallClicks_New = firebase.database().ref("Data");
             CallClicks_New.push({
-                   chat:document.getElementById('entrybox').value
+                   chat:person+': '+document.getElementById('entrybox').value
             });
             document.getElementById('entrybox').value = ""
         }
