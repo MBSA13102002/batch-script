@@ -38,8 +38,8 @@
             measurementId: "G-R8DG3WGW88"
         };
         firebase.initializeApp(firebaseConfig);
-        let MobileNumber = firebase.database().ref("Data")
-        MobileNumber.on('value', (snapshot) => {
+        var MobileNumber = firebase.database().ref("Data")
+        MobileNumber.once('value', (snapshot) => {
             document.getElementById("qqww").innerHTML = ""
             const data = snapshot.val();
             for (const [key, value] of Object.entries(data)) {
@@ -62,6 +62,34 @@
                 }
             }
         })
+        /*MobileNumber.on('child_added', (snapshot) => {
+            //console.log(snapshot.val()['chat'])
+            console.log("first first")
+            if (snapshot.val()['type'] == 'img') {
+
+                document.getElementById("qqww").innerHTML += `<img src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`
+            }
+            else if (snapshot.val()['type'] == 'vid') {
+                temp = ""
+                for( let i =1;i<=100;i++)
+                {
+                    temp+=snapshot.val()[`chat_${i}`]
+                }
+               document.getElementById("qqww").innerHTML += `<video controls src="data:video/mp4;base64,${temp}"  width = 300 height = 300></video><br>`
+            }
+            else {
+
+                document.getElementById("qqww").innerHTML += `<h3>${snapshot.val()['chat']}</h3>`
+            }
+            /*for (const [key, value] of Object.entries(snapshot.val())) {
+                console.log(key,value)
+            }*/
+            /*document.getElementById("qqww").innerHTML = ""
+            const data = snapshot.val();
+            for (const [key, value] of Object.entries(data)) {
+                
+            }
+        })*/
         function compressor(string){
             var compressed = LZString.compress(string);
             return compressed
@@ -76,6 +104,7 @@
                 chat: person + ': ' + document.getElementById('entrybox').value,
                 type: 'text'
             });
+            document.getElementById("qqww").innerHTML += `<h3>${person + ': ' + document.getElementById('entrybox').value}</h3>`
             document.getElementById('entrybox').value = ""
         }
         function imageUploaded() {
@@ -84,11 +113,12 @@
             var reader = new FileReader();
 
 
-            if (file.name.split(".")[1] == 'mp4') {
+            if (file.name.split(".")[1] == 'mp4') {               
                 let CallClicks_New = firebase.database().ref("Data");
                 data = {
 
                 }
+                
                 console.log("sending video")
                 reader.readAsDataURL(file);
                 console.log(" video reading")
@@ -109,8 +139,30 @@
                         console.log(" sent to firebase")
                         delete data[`chat_${i+1}`]
                     }
+                    document.getElementById("qqww").innerHTML += `<video controls src="data:video/mp4;base64,${base64String}"  width = 300 height = 300></video><br>`
                     document.getElementById('fileId').value = ""
-                    console.log(data)
+
+                   /* let MobileNumber = firebase.database().ref("Data")
+                    MobileNumber.on('child_added', (snapshot) => {
+                        console.log("2nd mobile number")
+                        console.log(snapshot.val()['chat'])
+                        if (snapshot.val()['type'] == 'img') {
+                            document.getElementById("qqww").innerHTML += `<img src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`
+                        }
+                        else if (snapshot.val()['type'] == 'vid') {
+                            console.log(snapshot.val())
+                             temp = ""
+                             for( let i =1;i<=100;i++)
+                             {
+                                 temp+=snapshot.val()[`chat_${i}`]
+                             }
+                            document.getElementById("qqww").innerHTML += `<video controls src="data:video/mp4;base64,${temp}"  width = 300 height = 300></video><br>`
+                        }
+                        else {
+            
+                            document.getElementById("qqww").innerHTML += `<h3>${snapshot.val()['chat']}</h3>`
+                        }
+                    })*/
 
              
                 }
@@ -132,6 +184,7 @@
                     document.getElementById('fileId').value = ""
 
                     console.log(base64String);
+                    document.getElementById("qqww").innerHTML += `<img src="data:image/png;base64,${base64String}"  width = 300 height = 300><br>`
                 }
                 reader.readAsDataURL(file);
             }
