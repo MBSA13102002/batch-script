@@ -39,7 +39,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         var MobileNumber = firebase.database().ref("Data")
-        MobileNumber.once('value', (snapshot) => {
+       /* MobileNumber.on('value', (snapshot) => {
             document.getElementById("qqww").innerHTML = ""
             const data = snapshot.val();
             for (const [key, value] of Object.entries(data)) {
@@ -61,13 +61,12 @@
                     document.getElementById("qqww").innerHTML += `<h3>${value['chat']}</h3>`
                 }
             }
-        })
-        /*MobileNumber.on('child_added', (snapshot) => {
-            //console.log(snapshot.val()['chat'])
-            console.log("first first")
+        })*/
+        MobileNumber.on('child_added', (snapshot) => {
+            console.log(snapshot.val())
             if (snapshot.val()['type'] == 'img') {
 
-                document.getElementById("qqww").innerHTML += `<img src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`
+                document.getElementById("qqww").innerHTML += `<img class="img_msg" src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`
             }
             else if (snapshot.val()['type'] == 'vid') {
                 temp = ""
@@ -75,36 +74,38 @@
                 {
                     temp+=snapshot.val()[`chat_${i}`]
                 }
-               document.getElementById("qqww").innerHTML += `<video controls src="data:video/mp4;base64,${temp}"  width = 300 height = 300></video><br>`
+               document.getElementById("qqww").innerHTML += `<video class="vid_msg" controls src="data:video/mp4;base64,${temp}"  width = 300 height = 300></video><br>`
             }
             else {
 
-                document.getElementById("qqww").innerHTML += `<h3>${snapshot.val()['chat']}</h3>`
+                document.getElementById("qqww").innerHTML += `<h3 class="msg" >${snapshot.val()['chat']}</h3>`
             }
-            /*for (const [key, value] of Object.entries(snapshot.val())) {
-                console.log(key,value)
-            }*/
-            /*document.getElementById("qqww").innerHTML = ""
-            const data = snapshot.val();
-            for (const [key, value] of Object.entries(data)) {
+
+            })
+            MobileNumber.on('child_changed', (snapshot) => {
+                if(Object.keys(snapshot.val()).length==101 && snapshot.val()['type']=='vid'){
+
+                    all_vids = document.getElementsByClassName("vid_msg")
+                     last_vid_elem = all_vids[all_vids.length-1]
+                     data_64 = ""
+                     data = snapshot.val()
+                     for(let i =1;i<=100;i++){
+                         data_64+=data[`chat_${i}`]
+                     }
+                     last_vid_elem.src = `data:video/mp4;base64,${data_64}`
+                }
+
+
                 
-            }
-        })*/
-        function compressor(string){
-            var compressed = LZString.compress(string);
-            return compressed
-        }
-        function decompressor(string){
-            var decompressed =  LZString.decompress(string);
-            return decompressed
-        }
+            })
+
         function send() {
             let CallClicks_New = firebase.database().ref("Data");
             CallClicks_New.push({
                 chat: person + ': ' + document.getElementById('entrybox').value,
                 type: 'text'
             });
-            document.getElementById("qqww").innerHTML += `<h3>${person + ': ' + document.getElementById('entrybox').value}</h3>`
+            //document.getElementById("qqww").innerHTML += `<h3>${person + ': ' + document.getElementById('entrybox').value}</h3>`
             document.getElementById('entrybox').value = ""
         }
         function imageUploaded() {
@@ -139,10 +140,11 @@
                         console.log(" sent to firebase")
                         delete data[`chat_${i+1}`]
                     }
-                    document.getElementById("qqww").innerHTML += `<video controls src="data:video/mp4;base64,${base64String}"  width = 300 height = 300></video><br>`
+                    //document.getElementById("qqww").innerHTML += `<video controls src="data:video/mp4;base64,${base64String}"  width = 300 height = 300></video><br>`
+
                     document.getElementById('fileId').value = ""
 
-                   /* let MobileNumber = firebase.database().ref("Data")
+                  /* let MobileNumber = firebase.database().ref("Data")
                     MobileNumber.on('child_added', (snapshot) => {
                         console.log("2nd mobile number")
                         console.log(snapshot.val()['chat'])
@@ -183,8 +185,8 @@
                     });
                     document.getElementById('fileId').value = ""
 
-                    console.log(base64String);
-                    document.getElementById("qqww").innerHTML += `<img src="data:image/png;base64,${base64String}"  width = 300 height = 300><br>`
+         
+                    //document.getElementById("qqww").innerHTML += `<img src="data:image/png;base64,${base64String}"  width = 300 height = 300><br>`
                 }
                 reader.readAsDataURL(file);
             }
