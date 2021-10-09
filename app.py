@@ -4,7 +4,7 @@ import os
 import json,ast
 import firebase_admin
 from firebase_admin import credentials,storage as strg
-cred = credentials.Certificate("./portfoliomanagement-16f09-firebase-adminsdk-9inmb-24030872d5.json")
+cred = credentials.Certificate("./hackilo-edutech-firebase-adminsdk-dw3m5-2921e246f2.json")
 from firebase import Firebase
 from werkzeug.utils import secure_filename 
 admin = firebase_admin.initialize_app(cred, {
@@ -19,26 +19,17 @@ def handle_catch(caller, on_exception):
     except:
          return on_exception
         
-# config = {
-#     "apiKey": "AIzaSyA1h6NqVizacIpvyUExiPzUy7LKbT5VV4c",
-#    "authDomain": "hackilo-edutech.firebaseapp.com",
-#     "databaseURL": "https://hackilo-edutech-default-rtdb.firebaseio.com",
-#     "projectId": "hackilo-edutech",
-#     "storageBucket": "hackilo-edutech.appspot.com",
-#     "messagingSenderId": "432434540165",
-#     "appId": "1:432434540165:web:e364ec66e0ae0e8e6cc3ec",
-#     "measurementId": "G-HVEVSTM0XC"
-# }
-config = {
-    "apiKey": "AIzaSyBQUpIYvs0WKfP5IMD4TE2IWTvpb5U34Cc",
-   "authDomain": "portfoliomanagement-16f09.firebaseapp.com",
-    "databaseURL": "https://portfoliomanagement-16f09.firebaseio.com",
-    "projectId": "portfoliomanagement-16f09",
-    "storageBucket": "portfoliomanagement-16f09.appspot.com",
-    "messagingSenderId": "505793158040",
-    "appId": "1:505793158040:web:14b9466a349235ef8b69ed",
-    "measurementId": "G-MRCWJ4R5RJ"
-}
+ config = {
+     "apiKey": "AIzaSyA1h6NqVizacIpvyUExiPzUy7LKbT5VV4c",
+    "authDomain": "hackilo-edutech.firebaseapp.com",
+     "databaseURL": "https://hackilo-edutech-default-rtdb.firebaseio.com",
+     "projectId": "hackilo-edutech",
+     "storageBucket": "hackilo-edutech.appspot.com",
+     "messagingSenderId": "432434540165",
+     "appId": "1:432434540165:web:e364ec66e0ae0e8e6cc3ec",
+     "measurementId": "G-HVEVSTM0XC"
+ }
+
 
 firebase = Firebase(config)
 db = firebase.database()
