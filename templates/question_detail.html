@@ -52,6 +52,49 @@
     <h1 class="text-center fnt">Details of Question with Id: {{question_data['Question_ID']}} </h1>
     <!-- <div style="display: inline-block;"> -->
     <a onclick="back()" class="mx-5 btn btn-info fnt contri_btn">BACK</a>
+    <a type="button" class="btn btn-info contri_btn" data-bs-toggle="modal"
+    data-bs-target="#ques-level">LEVEL</a>
+    
+    <div class="modal fade" id="ques-level" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fnt" id="exampleModalLabel">Question Level</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/question/level/{{chapter_key}}/{{question_key}}" method="POST">
+                    <div class="modal-body">
+                        <label class="fnt" for="cars">Question Type Filter:-</label>
+                        {% set levels = ['Hard','Medium','Easy'] %}
+                        {% call catch('') %}
+                        {% if question_data['Question_Level']==''%}
+                        <select name="cars" id="ques_types_level" class="form-control fnt" onchange="filter_levels(this)">
+                            <option value="Hard">Hard</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Easy" selected>Easy</option>
+                        </select>
+                        <input type="text" id="question_level" style="display:none" value="Easy" name="level">
+                        {% else %}
+                        <select name="cars" id="ques_types_level" class="form-control fnt" onchange="filter_levels(this)">
+                            <option value="{{question_data['Question_Level']}}">{{question_data['Question_Level']}}</option>
+                            {% for i in levels%}
+                              {% if i!= question_data['Question_Level']%}
+                            <option value="{{i}}">{{i}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                            <input type="text" id="question_level" style="display:none" value="{{question_data['Question_Level']}}" name="level">
+                            {% endif %}
+                            {% endcall %}
+                        <button class="btn btn-primary text-white my-2" type="submit">SAVE</button>
+
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
     <script>
         function back() {
 
@@ -60,7 +103,7 @@
     </script>
 
     <!-- ========================================================ADD TAGS MODAL START========================== -->
-    <a type="button" class=" mx-5 btn btn-info fnt contri_btn" data-bs-toggle="modal" data-bs-target="#exampleModal"
+    <a type="button" class=" mx-2 btn btn-info fnt contri_btn" data-bs-toggle="modal" data-bs-target="#exampleModal"
         style="float: right;">ADD TAGS </a>
     <div class="modal fade fnt" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -102,7 +145,7 @@
         </div>
     </div>
     <!-- ==========================================================Dropdown for topics start======================================================== -->
-    <a type="button" class=" mx-5 btn btn-info fnt contri_btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1"
+    <a type="button" class=" mx-1 btn btn-info fnt contri_btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1"
         style="float: right;">ADD TOPICS </a>
     <div class="modal fade" id="exampleModal_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -152,6 +195,35 @@
     </div>
 
     <!-- ==========================================================Dropdown for topics end======================================================== -->
+    <a type="button" class=" mx-1 btn btn-info fnt contri_btn" data-bs-toggle="modal" data-bs-target="#_ques-category_"
+    style="float: right;">ADD CATEGORIES </a>
+    <div class="modal fade" id="_ques-category_" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fnt" id="exampleModalLabel">Add New Category for the Question</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/question/category/{{chapter_key}}/{{question_key}}" method="POST" onsubmit = "return QuesCategories_()">
+                    <div class="modal-body fnt">
+                        <div class="modal-body">
+                            <label for="cars">Choose Categories:</label>
+                            <div id="ques_category_checkboxes">
+
+                            </div>
+                     
+                        </div>
+                    </div>
+                    <input type="text" style="display: none;" id="ques_specific_categories_htmldata" name = "ques_specific_categories_htmldata">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary fnt contri_btn" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary fnt contri_btn">SAVE CHANGES</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- ========================================================ADD TAGS MODAL START========================== -->
 
 
@@ -265,19 +337,21 @@
                 <!-- =================MULTIPLE CORRECT END===================================== -->
                 {% elif question_data['Question_Type']=="True & False" %}
                 <!-- =================TRUE & FALSE START===================================== -->
+                {% set unique_id_imp_0 =random_int(10)%}
+                {% set unique_id_imp_1 =random_int(10)%}
                 <div class="mb-3" id="ques_options_t&f">
                     <label for="formGroupExampleInput" class="form-label"><b>OPTIONS(TRUE & FALSE)</b></label>
                     {% if question_data['OPT_JSON']==" "%}
                     {% set tf_opt = "false" %}
                     <div id="div_sfgfdgfgf" class="form-check">
-                        <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="sfgfdgfgf"
+                        <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="{{unique_id_imp_0}}"
                             value="True">
                         <label class="form-check-label form-control fnt contri" for="flexRadioDefault"
                             style="width:95%;display:inline-block;text-align:left">True</label>
 
                     </div>
                     <div id="div_w3rygmnrt" class="form-check">
-                        <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="w3rygmnrt"
+                        <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="{{unique_id_imp_1}}"
                             value="False">
                         <label class="form-check-label form-control fnt contri" for="flexRadioDefault"
                             style="width:95%;display:inline-block;text-align:left">False</label>
@@ -400,7 +474,9 @@
             </div>
         </div>
     </div>
+<div id="ques_categories_encoded_data">
 
+</div>
 </body>
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
       
@@ -735,6 +811,84 @@ else{
 
 }
 //=========================================================================================================
+
+
+user_selected_ques_categories = []
+function htmlDecode(input) {
+    var doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.documentElement.textContent;
+}
+function QuesCategories_(){
+    document.getElementById("ques_specific_categories_htmldata").value =user_selected_ques_categories
+    a=confirm("Submit?")
+    if(a){
+        return true
+    }
+    else{
+        return false
+    }
+}
+function filter_levels(elem){
+    document.getElementById("question_level").value = elem.value
+}
+
+ques_category_data_div = document.createElement('div')
+ques_category_data_div.style.display = "none"
+ques_category_data_div.id = "div_ques_categories_specific"
+ques_category_data_div.innerHTML = htmlDecode("{{category_list_string}}")
+document.getElementById('ques_categories_encoded_data').appendChild(ques_category_data_div)
+jk = document.querySelectorAll("#div_ques_categories_specific > div > span")
+ques_categories_array = []
+for(let i = 0;i<jk.length;i++){
+    ques_categories_array.push(jk[i].innerText)
+}
+
+for(let i = 0;i<jk.length;i++){
+    ques_categories_array.push()
+    document.getElementById("ques_category_checkboxes").innerHTML+=`<div class="form-check">
+        <input class="form-check-input qcopt" type="checkbox" value="${jk[i].innerText}" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">
+          ${jk[i].innerText}
+        </label>
+      </div>`
+}
+
+var checkboxes_ques_ctegory = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]');
+checkboxes_ques_ctegory.forEach(checkbox_ques_ctegory => checkbox_ques_ctegory.addEventListener('change', () => {
+
+    if (checkbox_ques_ctegory.checked) {
+        user_selected_ques_categories.push(checkbox_ques_ctegory.value)
+        document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
+    }
+    else {
+        _index = user_selected_ques_categories.indexOf(checkbox_ques_ctegory.value)
+        if(_index!=-1){
+            user_selected_ques_categories.splice(_index,1)
+        }
+        
+        document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
+
+    }
+
+
+
+}
+));
+
+lkhm =htmlDecode("{{question_data['Categories_Data_Array']}}");
+try{
+jkhg = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]')
+for(let i =0;i<jkhg.length;i++){
+    if(lkhm.includes(jkhg[i].value)){
+        user_selected_ques_categories.push(jkhg[i].value)
+        jkhg[i].checked = true
+    }
+}
+}
+catch(err){
+}
+
+
 </script>
 
 
