@@ -63,6 +63,9 @@ def home():
         id =random.randint(10000,99999)
         data = {
             "ChapterName":Chapter_Name,
+            "Categories_Data":{
+                "DATA":""
+            },
             "Chapter_ID":id,
             "No_of_Questions":0,
             "Topics_List":" "
