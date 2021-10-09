@@ -7,75 +7,116 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-        <link href='https://fonts.googleapis.com/css?family=Sofia|ABeeZee|Amaranth' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Sofia|ABeeZee|Amaranth' rel='stylesheet'>
     <title>Details</title>
 </head>
 <style>
-    body{
+    body {
         background-color: #d3d7e7;
     }
-    .card-details{
+
+    .card-details {
         display: none;
     }
-    .fnt{
+
+    .fnt {
         font-family: Amaranth;
-      }
-      .contri {
+    }
+
+    .contri {
         border-radius: 20px;
         box-shadow: -2px -2px 5px #d7d9e0, 2px 2px 5px #d7d9e0;
-      }
-      .contri_btn {
+    }
+
+    .contri_btn {
         border-radius: 17px;
         box-shadow: -2px -2px 5px #d7d9e0, 2px 2px 5px #6f768f;
-      }
+    }
 </style>
+
 <body>
     {% macro catch(on_exception) %}
     {{ handle_catch(caller, on_exception) }}
     {% endmacro %}
     <h1 class="text-center fnt">Question List of {{chapter.val()['ChapterName']}}[{{chapter.val()['Chapter_ID']}}] </h1>
-    <center><a type="button" class="btn btn-primary contri_btn" data-bs-toggle="modal" data-bs-target="#filterquestype" >FILTER QUESTION</a></center>
+    <center><a type="button" class="btn btn-primary contri_btn mx-1" data-bs-toggle="modal"
+            data-bs-target="#filterquestype">FILTER QUESTION</a>
+        <a type="button" class="btn btn-primary contri_btn mx-1" data-bs-toggle="offcanvas"
+            data-bs-target="#quescategories">CATEGORIES</a>
+
+    </center>
+
     <!-- ==============================================================================================
      -->
-     <div class="modal fade" id="filterquestype" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title fnt" id="exampleModalLabel">Modal title</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="quescategories" aria-labelledby="offcanvasExampleLabel">
+        <form action="/chapter/category/{{chapter.key()}}" method="POST" onsubmit=" return validate_ques_category()">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title fnt" id="offcanvasExampleLabel">Question Categories</h5>
+                <input type="text" id="quescategoryhtmldata" name="quescategoryhtmldata" style="display: none;">
+                <button id="SaveQuesCategories" type="submit" class="btn btn-primary contri_btn">SAVE ALL</button>
+        </form>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row">
+            <div class="col-10">
+                <input id="_ques-category_" class="form-control contri fnt" type="search" placeholder="Category.."
+                    aria-label="Search" style="width: 100%;float:left" required>
             </div>
-            <div class="modal-body">
-                <label class="fnt" for="cars">Question Type Filter:-</label>
+            <div class="col-2">
 
-                <select name="cars" id="ques_types_filter" class="form-control fnt" onchange="filter_questions()">
-                  <option value="">All Types</option>
-                  {%for item in ques_types.each()%}
-                  {% if item.val()['type'] == "True & False" %}
-                  <option value="true &amp; false">{{item.val()['type']}}</option>
-                  {% else %}
-                  <option value="{{item.val()['type']}}">{{item.val()['type']}}</option>
-                  {% endif %}
-                  {% endfor %}
-                </select>
+                <a type="button" class="btn btn-primary contri_btn" onclick="AddQuesCategory()">Add</a>
             </div>
-          </div>
+
         </div>
-      </div>
-     <!-- ==================================================================================================== -->
+        <div class="col my-2" id="_QuesCategoryArea">
+
+
+        </div>
+
+    </div>
+    </div>
+    <div class="modal fade" id="filterquestype" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fnt" id="exampleModalLabel">Question Filter</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="fnt" for="cars">Question Type Filter:-</label>
+
+                    <select name="cars" id="ques_types_filter" class="form-control fnt" onchange="filter_questions()">
+                        <option value="">All Types</option>
+                        {%for item in ques_types.each()%}
+                        {% if item.val()['type'] == "True & False" %}
+                        <option value="true &amp; false">{{item.val()['type']}}</option>
+                        {% else %}
+                        <option value="{{item.val()['type']}}">{{item.val()['type']}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================================================================================================== -->
     <div class="row">
         <div class="col">
             <a href="/" class="mx-3 my-1 btn btn-info contri_btn fnt">BACK</a><br>
         </div>
         <div class="col">
-          <input id="search_chapter" class="form-control me-2 mx-2 contri fnt" type="search" placeholder="Search" aria-label="Search"
-            style="width: 40%;float:right">
+            <input id="search_chapter" class="form-control me-2 mx-2 contri fnt" type="search" placeholder="Search"
+                aria-label="Search" style="width: 40%;float:right">
         </div>
-  
-      </div>
-    
+
+    </div>
+
     <!-- ========================================================================================== -->
-    <button class="btn btn-primary mx-2 contri_btn fnt" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
-        aria-controls="offcanvasExample" style="float:right">
+    <button class="btn btn-primary mx-2 contri_btn fnt" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasExample" aria-controls="offcanvasExample" style="float:right">
         LIST OF TOPICS
     </button>
 
@@ -131,11 +172,13 @@
                         <div class="modal-body">
                             <div class="mb-1">
                                 <label for="formGroupExampleInput" class="form-label fnt">Topic Name</label>
-                                <input type="text" class="form-control fnt contri" name="Topic_Name" placeholder="Topic Name">
+                                <input type="text" class="form-control fnt contri" name="Topic_Name"
+                                    placeholder="Topic Name">
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary contri_btn" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary contri_btn"
+                                data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary contri_btn">Add Topic</button>
                         </div>
                     </form>
@@ -146,7 +189,8 @@
 
     <div>
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary mx-3 contri_btn fnt" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" class="btn btn-primary mx-3 contri_btn fnt" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
             ADD NEW QUESTION
         </button>
 
@@ -176,7 +220,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary contri_btn" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary contri_btn"
+                                data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary contri_btn">Save changes</button>
                         </div>
                     </form>
@@ -211,7 +256,8 @@
                 <h6 class="card-subtitle mb-2 text-muted qtypes fnt">Question Type: {{value['Question_Type']}}</h6>
 
 
-                <a type="button" href="/question/{{chapter.key()}}/{{key}}" class="btn btn-primary card-link contri_btn fnt">View
+                <a type="button" href="/question/{{chapter.key()}}/{{key}}"
+                    class="btn btn-primary card-link contri_btn fnt">View
                     Details</a>
                 <a id="{{key}}" type="button" onclick="confirmation(this)"
                     class="btn btn-danger card-link my-2 contri_btn fnt">Delete</a>
@@ -259,52 +305,106 @@
                 else {
                     return false
                 }
-                
+
             }
         </script>
+
         <script>
             document.getElementById("search_chapter").addEventListener('input', function () {
-              data = document.getElementById("search_chapter").value.toLowerCase()
-              card_titles = document.getElementsByClassName("card-details")
-              card = document.getElementsByClassName("card")
-              for (var i = 0; i < card_titles.length; i++) {
-                title = card_titles[i].innerHTML.toLowerCase()
-                if (title.includes(data)) {
-                  card[i].style.display = "block"
+                data = document.getElementById("search_chapter").value.toLowerCase()
+                card_titles = document.getElementsByClassName("card-details")
+                card = document.getElementsByClassName("card")
+                for (var i = 0; i < card_titles.length; i++) {
+                    title = card_titles[i].innerHTML.toLowerCase()
+                    if (title.includes(data)) {
+                        card[i].style.display = "block"
+                    }
+                    else {
+                        card[i].style.display = "none"
+                    }
                 }
-                else {
-                  card[i].style.display = "none"
-                }
-              }
-      
-              
+
+
             })
-            function filter_questions(){
-                cur_type_filter= document.getElementById("ques_types_filter").value.toLowerCase()
+            function filter_questions() {
+                cur_type_filter = document.getElementById("ques_types_filter").value.toLowerCase()
                 qtypes = document.getElementsByClassName("qtypes")
                 card = document.getElementsByClassName("card")
-                if(cur_type_filter!=""){
+                if (cur_type_filter != "") {
                     for (var i = 0; i < qtypes.length; i++) {
                         qtype = qtypes[i].innerText.slice(15,).toLowerCase()
-                      if (qtype==cur_type_filter) {
-                        card[i].style.display = "block"
-                      }
-                      else {
-                        card[i].style.display = "none"
-                      }
+                        if (qtype == cur_type_filter) {
+                            card[i].style.display = "block"
+                        }
+                        else {
+                            card[i].style.display = "none"
+                        }
                     }
                 }
-                else{
+                else {
                     for (var i = 0; i < qtypes.length; i++) {
-            
+
                         card[i].style.display = "block"
-                      
+
                     }
                 }
-               
-        
+
+
             }
-          </script>
+            function makeid(length) {
+                var result = '';
+                var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                var charactersLength = characters.length;
+                for (var i = 0; i < length; i++) {
+                    result += characters.charAt(Math.floor(Math.random() *
+                        charactersLength));
+                }
+                return result;
+            }
+            function AddQuesCategory() {
+
+                var id = makeid(10)
+                data = document.getElementById("_ques-category_").value
+
+                document.getElementById('_QuesCategoryArea').innerHTML += `              <div class="row">
+                        <span id="quescat_span_${id}" class="badge bg-primary rf my-1 fnt">${data}<i class="fa fa-times-circle-o" id="${id}" onclick="Remove_Ques_Category(this)" style="cursor: pointer; float: right;font-size:1.5rem"></i></span>
+                      </div>`
+                document.getElementById("_ques-category_").value = ""
+            }
+            function Remove_Ques_Category(elem) {
+                a = confirm("Sure to Remove This Category?")
+                if (a) {
+                    temp_id = elem.id
+                    document.getElementById("quescat_span_" + temp_id).remove()
+                }
+                else {
+
+                }
+            }
+            function validate_ques_category() {
+                a = confirm("Save All ?")
+                document.getElementById("quescategoryhtmldata").value = document.getElementById("_QuesCategoryArea").innerHTML
+                if (a) {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+            function htmlDecode(input) {
+                var doc = new DOMParser().parseFromString(input, "text/html");
+                return doc.documentElement.textContent;
+            }
+        </script>
+
+        {% call catch('') %}
+        <script>
+
+            document.getElementById("quescategoryhtmldata").value = htmlDecode("{{chapter.val()['Categories_Data']['DATA']}}")
+            document.getElementById("_QuesCategoryArea").innerHTML = htmlDecode("{{chapter.val()['Categories_Data']['DATA']}}")
+
+        </script>
+        {% endcall %}
     </div>
 
 
