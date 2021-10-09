@@ -8,7 +8,7 @@ cred = credentials.Certificate("./hackilo-edutech-firebase-adminsdk-dw3m5-2921e2
 from firebase import Firebase
 from werkzeug.utils import secure_filename 
 admin = firebase_admin.initialize_app(cred, {
-      'storageBucket': 'portfoliomanagement-16f09.appspot.comd'})
+      'storageBucket': 'hackilo-edutech.appspot.com'})
 def rand_pass():
     pass_data = "qwertyuiopasdfgjklzxcvbnm1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     password = "".join(random.sample(pass_data, 10))
