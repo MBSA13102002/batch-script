@@ -4,11 +4,11 @@ import os
 import json,ast
 import firebase_admin
 from firebase_admin import credentials,storage as strg
-cred = credentials.Certificate("./hackilo-edutech-firebase-adminsdk-dw3m5-2921e246f2.json")
+cred = credentials.Certificate("./portfoliomanagement-16f09-firebase-adminsdk-9inmb-24030872d5.json")
 from firebase import Firebase
 from werkzeug.utils import secure_filename 
 admin = firebase_admin.initialize_app(cred, {
-      'storageBucket': 'hackilo-edutech.appspot.com'})
+      'storageBucket': 'portfoliomanagement-16f09.appspot.comd'})
 def rand_pass():
     pass_data = "qwertyuiopasdfgjklzxcvbnm1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     password = "".join(random.sample(pass_data, 10))
@@ -19,15 +19,25 @@ def handle_catch(caller, on_exception):
     except:
          return on_exception
         
+# config = {
+#     "apiKey": "AIzaSyA1h6NqVizacIpvyUExiPzUy7LKbT5VV4c",
+#    "authDomain": "hackilo-edutech.firebaseapp.com",
+#     "databaseURL": "https://hackilo-edutech-default-rtdb.firebaseio.com",
+#     "projectId": "hackilo-edutech",
+#     "storageBucket": "hackilo-edutech.appspot.com",
+#     "messagingSenderId": "432434540165",
+#     "appId": "1:432434540165:web:e364ec66e0ae0e8e6cc3ec",
+#     "measurementId": "G-HVEVSTM0XC"
+# }
 config = {
-    "apiKey": "AIzaSyA1h6NqVizacIpvyUExiPzUy7LKbT5VV4c",
-   "authDomain": "hackilo-edutech.firebaseapp.com",
-    "databaseURL": "https://hackilo-edutech-default-rtdb.firebaseio.com",
-    "projectId": "hackilo-edutech",
-    "storageBucket": "hackilo-edutech.appspot.com",
-    "messagingSenderId": "432434540165",
-    "appId": "1:432434540165:web:e364ec66e0ae0e8e6cc3ec",
-    "measurementId": "G-HVEVSTM0XC"
+    "apiKey": "AIzaSyBQUpIYvs0WKfP5IMD4TE2IWTvpb5U34Cc",
+   "authDomain": "portfoliomanagement-16f09.firebaseapp.com",
+    "databaseURL": "https://portfoliomanagement-16f09.firebaseio.com",
+    "projectId": "portfoliomanagement-16f09",
+    "storageBucket": "portfoliomanagement-16f09.appspot.com",
+    "messagingSenderId": "505793158040",
+    "appId": "1:505793158040:web:14b9466a349235ef8b69ed",
+    "measurementId": "G-MRCWJ4R5RJ"
 }
 
 firebase = Firebase(config)
@@ -84,6 +94,7 @@ def chapter_details(chapter_key):
             "Question":Question,
             "Question_Type":Question_Type,
             "Question_ID":id,
+            "Question_Level":"",
             "OPT_JSON":" ",
             "Topics_List":" ",
             "Explanation":" "
@@ -115,6 +126,17 @@ def chapter_topic_add(chapter_key):
          "Topic_Name":Topic_Name
         }
         db.child("Chapter_List").child(chapter_key).child("Topics_List").push(data)
+        return redirect(url_for('chapter_details',chapter_key=chapter_key))
+
+
+@app.route("/chapter/category/<string:chapter_key>/",methods = ['GET','POST'])
+def chapter_category_add(chapter_key):
+    if request.method == 'POST':
+        HTMLDATA=request.form.get("quescategoryhtmldata")
+        data = {
+         "DATA":HTMLDATA
+        }
+        db.child("Chapter_List").child(chapter_key).child("Categories_Data").set(data)
         return redirect(url_for('chapter_details',chapter_key=chapter_key))
 
 
@@ -183,7 +205,7 @@ def question_detail(chapter_key,question_key):
         if (item.key()==chapter_key):
             for key,value in item.val()["Question_List"].items():
                 if(key==question_key):
-                    return render_template("question_detail.html",question_data=value,chapter_key = chapter_key,question_key = key,ques_types = Types_Of_Questions,img_data = db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").get(),topic_list = item.val()["Topics_List"], handle_catch=handle_catch)
+                    return render_template("question_detail.html",question_data=value,chapter_key = chapter_key,question_key = key,ques_types = Types_Of_Questions,img_data = db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").get(),topic_list = item.val()["Topics_List"],category_list_string = item.val()['Categories_Data']['DATA'],user_category_array = db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Categories_Data_Array").get().val(), handle_catch=handle_catch)
 
 
 
@@ -199,6 +221,18 @@ def question_topic_add(chapter_key,question_key):
             y=" "
         
         db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Topics_List").set(y)
+        return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
+
+@app.route("/question/category/<string:chapter_key>/<string:question_key>",methods = ['GET','POST'])
+def question_category_add(chapter_key,question_key):
+    if request.method =='POST':
+        categories= request.form.get("ques_specific_categories_htmldata")
+        # if categories!="":
+        #     y = ast.literal_eval(topic_JSON)
+        # else:
+        #     y=" "
+        
+        db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Categories_Data_Array").set(categories.split(','))
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
@@ -259,6 +293,14 @@ def chapter_delete(chapter_key):
             return redirect(url_for('home'))
             # return render_template("index.html",Chapter_List = db.child("Chapter_List").get(),handle_catch=handle_catch)
 
+@app.route("/question/level/<string:chapter_key>/<string:question_key>",methods = ['GET','POST'])
+def question_level_add(chapter_key,question_key):
+    if request.method =='POST':
+        level = request.form.get("level")
+        db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).update({
+            "Question_Level":level
+        })
+        return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
 
@@ -288,3 +330,4 @@ def question_delete(chapter_key_first,chapter_key,question_key):
 
 
 
+app.run()
