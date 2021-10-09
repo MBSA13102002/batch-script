@@ -19,7 +19,7 @@ def handle_catch(caller, on_exception):
     except:
          return on_exception
         
- config = {
+config = {
      "apiKey": "AIzaSyA1h6NqVizacIpvyUExiPzUy7LKbT5VV4c",
     "authDomain": "hackilo-edutech.firebaseapp.com",
      "databaseURL": "https://hackilo-edutech-default-rtdb.firebaseio.com",
