@@ -421,11 +421,13 @@
     </form>
 
     <h1 class="text-center my-2">Image Upload Section:- </h1>
-    <form action="/upload/{{chapter_key}}/{{question_key}}" class="dropzone" id="my-dropzone" method="POST">
+    <!-- <form action="/upload/{{chapter_key}}/{{question_key}}" class="dropzone" id="my-dropzone" method="POST"> -->
+    <form action="/upload/{{chapter_key}}/{{question_key}}" method="post" enctype="multipart/form-data">
         <div class="form-group my-2">
-
-            <button type="submit" class="btn btn-primary contri_btn" style="float:left;">UPLOAD &
-                SAVE</button>
+          <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="">
+          <input class="btn btn-primary" type="submit" value="Submit">
+            <!-- <button type="submit" class="btn btn-primary contri_btn" style="float:left;">UPLOAD &
+                SAVE</button> -->
         </div>
     </form>
     <style>
@@ -488,7 +490,7 @@
 </script>
 <script type="text/javascript">
 
-    Dropzone.options.myDropzone = {
+    /*Dropzone.options.myDropzone = {
         addRemoveLinks: true,
         autoProcessQueue: false,
         maxFilesize: 8,
@@ -511,7 +513,7 @@
             //fileCountOnServer = 2; // The number of files already uploaded
             //myDropzone.options.maxFiles = myDropzone.options.maxFiles - fileCountOnServer;
         }
-    };
+    };*/
 </script>
 <script defer>
 
