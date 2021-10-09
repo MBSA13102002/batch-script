@@ -39,7 +39,7 @@ app = Flask(__name__)
 
 
 app.config['UPLOAD_EXTENSIONS'] = ['.png','.jpg','jpeg','.webp','.PNG','.JPG','.JPEG','.WEBP'] 
-app.config['MAX_CONTENT_LENGTH'] = 2048 * 2048
+app.config['MAX_CONTENT_LENGTH'] = 512*512
 
 
 # =========================================================
@@ -235,24 +235,38 @@ def question_category_add(chapter_key,question_key):
 @app.route("/upload/<string:chapter_key>/<string:question_key>/",methods = ['GET','POST'])
 def photo_upload(chapter_key,question_key):
     if request.method =='POST':
-        sai = request.form.get("uploaddd")
-        print(str(sai))
-        my_files = request.files           
-        for item in my_files: 
-            uploaded_file = my_files.get(item)  
-            uploaded_file.filename = secure_filename(uploaded_file.filename)        
-            if uploaded_file.filename != '':            
-                file_ext = os.path.splitext(uploaded_file.filename)[1]           
-            if file_ext not in app.config['UPLOAD_EXTENSIONS']:            
-                abort(400)         
-            unique_id =  rand_pass()
-            uploaded_file.save(unique_id)  
-            storage.child(f"images/{unique_id}").put(unique_id)
-            db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
-                "url":storage.child(f"images/{unique_id}").get_url(None),
-                "filename":unique_id
-                })
-            os.remove(unique_id)
+        my_files = request.files['files']       
+        # for item in my_files: 
+        #     uploaded_file = my_files.get(item)  
+        #     uploaded_file.filename = secure_filename(uploaded_file.filename)        
+        #     if uploaded_file.filename != '':            
+        #         file_ext = os.path.splitext(uploaded_file.filename)[1]           
+        #     if file_ext not in app.config['UPLOAD_EXTENSIONS']:            
+        #         abort(400)         
+        #     unique_id =  rand_pass()
+        #     uploaded_file.save(unique_id)  
+        #     storage.child(f"images/{unique_id}").put(unique_id)
+        #     db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
+        #         "url":storage.child(f"images/{unique_id}").get_url(None),
+        #         "filename":unique_id
+        #         })
+        #     os.remove(unique_id)
+        # unique_id =  rand_pass()
+        # my_files.save(unique_id)  
+        # storage.child(f"images/{unique_id}").put(unique_id)
+        # db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
+        #     "url":storage.child(f"images/{unique_id}").get_url(None),
+        #     "filename":unique_id
+        #     })
+        # os.remove(unique_id)
+        unique_id =  rand_pass()
+        my_files.save(unique_id)  
+        storage.child(f"images/{unique_id}").put(unique_id)
+        db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
+            "url":storage.child(f"images/{unique_id}").get_url(None),
+            "filename":unique_id
+            })
+        os.remove(unique_id)
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
@@ -320,7 +334,6 @@ def question_delete(chapter_key_first,chapter_key,question_key):
                         db.child("Chapter_List").child(chapter_key).child("No_of_Questions").set(number.val()-1)
                         return redirect(url_for('chapter_details',chapter_key=chapter_key))
             # return render_template("index.html",Chapter_List = db.child("Chapter_List").get(),handle_catch=handle_catch)
-
 
 
 
