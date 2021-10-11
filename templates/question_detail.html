@@ -446,7 +446,7 @@
     <form action="" onsubmit="return false">
 
         <div class="form-group my-2">
-            <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="">
+            <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="images_upload">
             <input type="submit" class="btn btn-primary" value="Submit" onclick="Add_Image()">
     
         </div>
@@ -915,6 +915,7 @@
                 <button class="btn-sm btn-danger contri_btn" onclick="Remove_Image('${img_un_key.key}')">Remove File</button>
     
             </div>`
+            document.getElementById("images_upload").value = ""
 
             }
             reader.readAsDataURL(file);
