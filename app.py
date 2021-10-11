@@ -237,18 +237,13 @@ def question_category_add(chapter_key,question_key):
 @app.route("/upload/<string:chapter_key>/<string:question_key>/",methods = ['GET','POST'])
 def photo_upload(chapter_key,question_key):
     if request.method =='POST':
-        my_files = request.files['files']       
-        unique_id =  rand_pass()
-        file_ext = my_files.filename.split(".")[1]
-        print(unique_id)
-        my_files.save(f"images/{unique_id}.{file_ext}") 
-# compressing the image from local storage start
-        picture = Image.open(f"images/{unique_id}.{file_ext}")
-        picture.save(f"images/{unique_id}.{file_ext}", 
-                        optimize = True, 
-                        quality = 10) 
-# compressing the image from local storage end
-        try:
+       try:
+            my_files = request.files['files']       
+            unique_id =  rand_pass()
+            file_ext = my_files.filename.split(".")[1]
+            print(unique_id)
+            my_files.save(f"images/{unique_id}.{file_ext}") 
+       
             storage.child(f"images/{unique_id}.{file_ext}").put(f"images/{unique_id}.{file_ext}")
             db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
                 "url":storage.child(f"images/{unique_id}.{file_ext}").get_url(None),
