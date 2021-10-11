@@ -240,7 +240,7 @@ def photo_upload(chapter_key,question_key):
             my_files = request.files['files']       
             unique_id =  rand_pass()
             file_ext = my_files.filename.split(".")[1]
-            my_files.save(f"images/{unique_id}.{file_ext}") 
+            my_files.save(f"{unique_id}.{file_ext}") 
     # compressing the image from local storage start
 #             picture = Image.open(f"images/{unique_id}.{file_ext}")
                 
@@ -249,12 +249,12 @@ def photo_upload(chapter_key,question_key):
 #                             optimize = True, 
 #                             quality = 10) 
     # compressing the image from local storage end
-            storage.child(f"images/{unique_id}.{file_ext}").put(f"images/{unique_id}.{file_ext}")
+            storage.child(f"images/{unique_id}.{file_ext}").put(f"{unique_id}.{file_ext}")
             db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
                 "url":storage.child(f"images/{unique_id}.{file_ext}").get_url(None),
                 "filename":unique_id+'.'+file_ext
                 })
-            os.remove(f"images/{unique_id}.{file_ext}")
+            os.remove(f"{unique_id}.{file_ext}")
         except Exception as e:
             pass     
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
