@@ -424,7 +424,8 @@
     <!-- <form action="/upload/{{chapter_key}}/{{question_key}}" class="dropzone" id="my-dropzone" method="POST"> -->
     <form action="/upload/{{chapter_key}}/{{question_key}}" method="post" enctype="multipart/form-data">
         <div class="form-group my-2">
-          <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="">
+            <input type="text" style="display: none;" id="base64ofimage" name = "base64ofimage">
+          <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="" onchange="image2base64()">
           <input class="btn btn-primary" type="submit" value="Submit">
             <!-- <button type="submit" class="btn btn-primary contri_btn" style="float:left;">UPLOAD &
                 SAVE</button> -->
@@ -832,6 +833,17 @@ function QuesCategories_(){
 }
 function filter_levels(elem){
     document.getElementById("question_level").value = elem.value
+}
+function image2base64(){
+    var file = document.querySelector(
+        'input[type=file]')['files'][0];
+    var reader = new FileReader();
+    reader.onload = function () {
+        document.getElementById("base64ofimage").value = reader.result
+        
+    }
+    reader.readAsDataURL(file);
+    
 }
 
 ques_category_data_div = document.createElement('div')
