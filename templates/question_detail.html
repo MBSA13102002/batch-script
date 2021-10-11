@@ -18,27 +18,32 @@
     <title>Details</title>
 </head>
 <style>
-    body{
+    body {
         background-color: #d3d7e7;
         font-family: Amaranth;
     }
-    .card-details{
+
+    .card-details {
         display: none;
     }
-    
-      .contri {
+
+    .contri {
         border-radius: 20px;
         box-shadow: -2px -2px 5px #d7d9e0, 2px 2px 5px #d7d9e0;
-      }
-      .contri_btn {
+    }
+
+    .contri_btn {
         border-radius: 17px;
         box-shadow: -2px -2px 5px #d7d9e0, 2px 2px 5px #6f768f;
-      }
-      input,textarea{
+    }
+
+    input,
+    textarea {
         border-radius: 20px;
         box-shadow: -2px -2px 5px #d7d9e0, 2px 2px 5px #d7d9e0;
-      }
+    }
 </style>
+
 <body>
     {% macro catch(on_exception) %}
     {{ handle_catch(caller, on_exception) }}
@@ -52,9 +57,8 @@
     <h1 class="text-center fnt">Details of Question with Id: {{question_data['Question_ID']}} </h1>
     <!-- <div style="display: inline-block;"> -->
     <a onclick="back()" class="mx-5 btn btn-info fnt contri_btn">BACK</a>
-    <a type="button" class="btn btn-info contri_btn" data-bs-toggle="modal"
-    data-bs-target="#ques-level">LEVEL</a>
-    
+    <a type="button" class="btn btn-info contri_btn" data-bs-toggle="modal" data-bs-target="#ques-level">LEVEL</a>
+
     <div class="modal fade" id="ques-level" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -68,24 +72,28 @@
                         {% set levels = ['Hard','Medium','Easy'] %}
                         {% call catch('') %}
                         {% if question_data['Question_Level']==''%}
-                        <select name="cars" id="ques_types_level" class="form-control fnt" onchange="filter_levels(this)">
+                        <select name="cars" id="ques_types_level" class="form-control fnt"
+                            onchange="filter_levels(this)">
                             <option value="Hard">Hard</option>
                             <option value="Medium">Medium</option>
                             <option value="Easy" selected>Easy</option>
                         </select>
                         <input type="text" id="question_level" style="display:none" value="Easy" name="level">
                         {% else %}
-                        <select name="cars" id="ques_types_level" class="form-control fnt" onchange="filter_levels(this)">
-                            <option value="{{question_data['Question_Level']}}">{{question_data['Question_Level']}}</option>
+                        <select name="cars" id="ques_types_level" class="form-control fnt"
+                            onchange="filter_levels(this)">
+                            <option value="{{question_data['Question_Level']}}">{{question_data['Question_Level']}}
+                            </option>
                             {% for i in levels%}
-                              {% if i!= question_data['Question_Level']%}
+                            {% if i!= question_data['Question_Level']%}
                             <option value="{{i}}">{{i}}</option>
                             {% endif %}
                             {% endfor %}
                         </select>
-                            <input type="text" id="question_level" style="display:none" value="{{question_data['Question_Level']}}" name="level">
-                            {% endif %}
-                            {% endcall %}
+                        <input type="text" id="question_level" style="display:none"
+                            value="{{question_data['Question_Level']}}" name="level">
+                        {% endif %}
+                        {% endcall %}
                         <button class="btn btn-primary text-white my-2" type="submit">SAVE</button>
 
 
@@ -137,7 +145,8 @@
 
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary contri_btn" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary contri_btn"
+                            data-bs-dismiss="modal">Close</button>
                         <button type="button" onclick="add_tag()" class="btn btn-primary contri_btn">ADD TAG</button>
                     </div>
                 </form>
@@ -159,7 +168,8 @@
                         <div class="modal-body">
                             <label for="cars">Choose topics:</label>
                             {% call catch('') %}
-                            <select onchange="maketopic(this)" name="cars" id="topics" class="form-control fnt" multiple>
+                            <select onchange="maketopic(this)" name="cars" id="topics" class="form-control fnt"
+                                multiple>
                                 <option value="" disabled selected>Select</option>
                                 {% for key,value in topic_list.items()%}
                                 <option value="{{value['Topic_Name']}}">{{value['Topic_Name']}}</option>
@@ -186,7 +196,8 @@
 
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary fnt contri_btn" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary fnt contri_btn"
+                            data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary fnt contri_btn">SAVE CHANGES</button>
                     </div>
                 </form>
@@ -196,7 +207,7 @@
 
     <!-- ==========================================================Dropdown for topics end======================================================== -->
     <a type="button" class=" mx-1 btn btn-info fnt contri_btn" data-bs-toggle="modal" data-bs-target="#_ques-category_"
-    style="float: right;">ADD CATEGORIES </a>
+        style="float: right;">ADD CATEGORIES </a>
     <div class="modal fade" id="_ques-category_" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -204,19 +215,22 @@
                     <h5 class="modal-title fnt" id="exampleModalLabel">Add New Category for the Question</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="/question/category/{{chapter_key}}/{{question_key}}" method="POST" onsubmit = "return QuesCategories_()">
+                <form action="/question/category/{{chapter_key}}/{{question_key}}" method="POST"
+                    onsubmit="return QuesCategories_()">
                     <div class="modal-body fnt">
                         <div class="modal-body">
                             <label for="cars">Choose Categories:</label>
                             <div id="ques_category_checkboxes">
 
                             </div>
-                     
+
                         </div>
                     </div>
-                    <input type="text" style="display: none;" id="ques_specific_categories_htmldata" name = "ques_specific_categories_htmldata">
+                    <input type="text" style="display: none;" id="ques_specific_categories_htmldata"
+                        name="ques_specific_categories_htmldata">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary fnt contri_btn" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary fnt contri_btn"
+                            data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary fnt contri_btn">SAVE CHANGES</button>
                     </div>
                 </form>
@@ -234,7 +248,8 @@
                 <div class="mb-3">
                     <label for="formGroupExampleInput" class="form-label fnt"><b>QUESTION:-</b></label>
 
-                    <textarea type="text" class="form-control contri" name="Question">{{question_data['Question']}}</textarea>
+                    <textarea type="text" class="form-control contri"
+                        name="Question">{{question_data['Question']}}</textarea>
                 </div>
                 <div class="mb-3">
 
@@ -280,7 +295,8 @@
                     <div id="div_{{key}}" class="form-check">
                         <input class="form-check-input mb " type="radio" name="flexRadioDefault" id="{{key}}"
                             value="{{value_opt}}" checked>
-                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}"
+                            for="flexRadioDefault"
                             style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
                         <i class="fa fa-times-circle" aria-hidden="true" onclick="remove_opt('{{key}}')"
                             style="font-size: 20px;cursor:pointer"></i>
@@ -289,7 +305,8 @@
                     <div id="div_{{key}}" class="form-check">
                         <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="{{key}}"
                             value="{{value_opt}}">
-                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}"
+                            for="flexRadioDefault"
                             style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
                         <i class="fa fa-times-circle" aria-hidden="true" onclick="remove_opt('{{key}}')"
                             style="font-size: 20px;cursor:pointer"></i>
@@ -315,7 +332,8 @@
                     <div id="div_{{key}}" class="form-check">
                         <input class="form-check-input mb" type="checkbox" name="flexRadioDefault" id="{{key}}"
                             value="{{value_opt}}" checked>
-                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}"
+                            for="flexRadioDefault"
                             style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
                         <i class="fa fa-times-circle" aria-hidden="true" onclick="remove_opt('{{key}}')"
                             style="font-size: 20px;cursor:pointer"></i>
@@ -324,7 +342,8 @@
                     <div id="div_{{key}}" class="form-check">
                         <input class="form-check-input mb" type="checkbox" name="flexRadioDefault" id="{{key}}"
                             value="{{value_opt}}">
-                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}"
+                            for="flexRadioDefault"
                             style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
                         <i class="fa fa-times-circle" aria-hidden="true" onclick="remove_opt('{{key}}')"
                             style="font-size: 20px;cursor:pointer"></i>
@@ -367,7 +386,8 @@
                     <div id="div_{{key}}" class="form-check">
                         <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="{{key}}"
                             value="{{value_opt}}" checked>
-                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}"
+                            for="flexRadioDefault"
                             style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
 
                     </div>
@@ -375,7 +395,8 @@
                     <div id="div_{{key}}" class="form-check">
                         <input class="form-check-input mb" type="radio" name="flexRadioDefault" id="{{key}}"
                             value="{{value_opt}}">
-                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}" for="flexRadioDefault"
+                        <label class="form-check-label form-control fnt contri" id="${unique_id_imp}"
+                            for="flexRadioDefault"
                             style="width:95%;display:inline-block;text-align:left">{{value_opt}}</label>
 
                     </div>
@@ -408,29 +429,29 @@
                 </div>
                 <!-- =================NUMERICAL TYPE END===================================== -->
                 {% endif %}
-                <div class="mb-3" >
+                <div class="mb-3">
                     <label for="formGroupExampleInput" class="form-label"><b>EXPLANATION:-</b></label>
                     <div id="editor_exp" style="background-color: white;">
                         <p>Write Explanation of the answer here:-</p>
                         <p><br></p>
                     </div>
-                    <input type="text" id="ques_explanation" name="Explanation" value="{{question_data['Explanation']}}" style="display: none;">
+                    <input type="text" id="ques_explanation" name="Explanation" value="{{question_data['Explanation']}}"
+                        style="display: none;">
                 </div>
             </div>
             <button type="submit" class="btn btn-danger my-2 contri_btn">SAVE CHANGES</button>
     </form>
 
     <h1 class="text-center my-2">Image Upload Section:- </h1>
-    <!-- <form action="/upload/{{chapter_key}}/{{question_key}}" class="dropzone" id="my-dropzone" method="POST"> -->
-        <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="" onchange="image2base64()">
-    <form action="/upload/{{chapter_key}}/{{question_key}}" method="post" enctype="multipart/form-data">
+    <form action="" onsubmit="return false">
+
         <div class="form-group my-2">
-            <input type="text" style="display: none;" id="base64ofimage" name = "base64ofimage">
-          <input class="btn btn-primary" type="submit" value="Submit">
-            <!-- <button type="submit" class="btn btn-primary contri_btn" style="float:left;">UPLOAD &
-                SAVE</button> -->
+            <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="">
+            <input type="submit" class="btn btn-primary" value="Submit" onclick="Add_Image()">
+    
         </div>
     </form>
+
     <style>
         .df {
             width: 150px;
@@ -438,19 +459,16 @@
         }
     </style>
     <h1 class="text-center my-2">Already Uploaded Photos:-</h1>
-    <div class="row my-2">
+    <div class="row my-2" id="uploaded_photos">
         {% call catch('') %}
         {% for item in img_data.each()%}
-        <div class="col">
-            <img src="{{item.val()['url']}}" alt="" class="m-2 df"><br>
+        <div class="col" id="col_{{item.val()['filename']}}">
+            <img src="{{item.val()['url']}}" alt="" class="m-2 df" id="{{item.val()['filename']}}"><br>
             {% set filename = item.val['filename'] %}
-            <form onsubmit="return validate(this);"
-                action="/delete/{{chapter_key}}/{{question_key}}/{{item.key()}}/{{item.val()['filename']}}"
-                method="POST">
-                <button type="submit" class="btn-sm btn-danger contri_btn">Remove File</button>
-            </form>
-        </div>
+            <button class="btn-sm btn-danger contri_btn" onclick="Remove_Image(`{{item.val()['filename']}}`)">Remove
+                File</button>
 
+        </div>
         {% endfor %}
         {% endcall %}
     </div>
@@ -477,17 +495,17 @@
             </div>
         </div>
     </div>
-<div id="ques_categories_encoded_data">
+    <div id="ques_categories_encoded_data">
 
-</div>
+    </div>
 </body>
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-      
+
 <!-- Initialize Quill editor -->
 <script>
-  var quill = new Quill('#editor_exp', {
-    theme: 'snow'
-  });
+    var quill = new Quill('#editor_exp', {
+        theme: 'snow'
+    });
 </script>
 <script type="text/javascript">
 
@@ -516,7 +534,25 @@
         }
     };*/
 </script>
+<script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js></script>
+<script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js></script>
+<script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-analytics.js></script>
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyA1h6NqVizacIpvyUExiPzUy7LKbT5VV4c",
+        authDomain: "hackilo-edutech.firebaseapp.com",
+        projectId: "hackilo-edutech",
+        storageBucket: "hackilo-edutech.appspot.com",
+        messagingSenderId: "432434540165",
+        appId: "1:432434540165:web:e364ec66e0ae0e8e6cc3ec",
+        measurementId: "G-HVEVSTM0XC"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+</script>
 <script defer>
+
+
 
 
     var options = {
@@ -545,7 +581,7 @@
     }
 
 
-  
+
 
     function add_tag() {
         unique_id = makeid(5)
@@ -796,111 +832,156 @@
         }
         else {
             var myEditor = document.querySelector('#editor_exp')
-            var html = myEditor.children[0].innerHTML                
+            var html = myEditor.children[0].innerHTML
             document.getElementById("ques_explanation").value = html;
             return true
         }
     }
 
-//==================================================rendering explanation==================================
-if("{{question_data['Explanation']}}"==""||"{{question_data['Explanation']}}"==" "){
-    console.log("No Explanation")
-}
-else{
-    var exp = "{{question_data['Explanation']}}"
-    var myEditor = document.querySelector('#editor_exp')
-    myEditor.children[0].innerHTML  = document.getElementById("ques_explanation").value;
-
-
-}
-//=========================================================================================================
-
-
-user_selected_ques_categories = []
-function htmlDecode(input) {
-    var doc = new DOMParser().parseFromString(input, "text/html");
-    return doc.documentElement.textContent;
-}
-function QuesCategories_(){
-    document.getElementById("ques_specific_categories_htmldata").value =user_selected_ques_categories
-    a=confirm("Submit?")
-    if(a){
-        return true
+    //==================================================rendering explanation==================================
+    if ("{{question_data['Explanation']}}" == "" || "{{question_data['Explanation']}}" == " ") {
+        console.log("No Explanation")
     }
-    else{
-        return false
+    else {
+        var exp = "{{question_data['Explanation']}}"
+        var myEditor = document.querySelector('#editor_exp')
+        myEditor.children[0].innerHTML = document.getElementById("ques_explanation").value;
+
+
     }
-}
-function filter_levels(elem){
-    document.getElementById("question_level").value = elem.value
-}
-function image2base64(){
-    var file = document.querySelector(
-        'input[type=file]')['files'][0];
-    var reader = new FileReader();
-    reader.onload = function () {
-        document.getElementById("base64ofimage").value = reader.result
-        
+    //=========================================================================================================
+
+
+    user_selected_ques_categories = []
+    function htmlDecode(input) {
+        var doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
     }
-    reader.readAsDataURL(file);
+    function QuesCategories_() {
+        document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
+        a = confirm("Submit?")
+        if (a) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    function filter_levels(elem) {
+        document.getElementById("question_level").value = elem.value
+    }
+    function image2base64() {
+        var file = document.querySelector(
+            'input[type=file]')['files'][0];
+        var reader = new FileReader();
+        reader.onload = function () {
+            document.getElementById("base64ofimage").value = reader.result
+
+        }
+        reader.readAsDataURL(file);
+
+    }
+    function Remove_Image(str) {
+        confirmation = confirm("Are You Sure?")
+        if (confirmation) {
+            var Image_Data_Directoty_Removal = firebase.database().ref("Chapter_List").child("{{chapter_key}}").child("Question_List").child("{{question_key}}").child("Images").child(str)
+            Image_Data_Directoty_Removal.remove()
+            document.getElementById(`col_${str}`).remove()
+
+        }
+        else {
+
+        }
+    }
+    function Add_Image() {
+        a = confirm("Add the Image?")
+        if (a) {
+
+            var Image_Data_Directoty = firebase.database().ref("Chapter_List").child("{{chapter_key}}").child("Question_List").child("{{question_key}}").child("Images")
+            var file = document.querySelector(
+                'input[type=file]')['files'][0];
+            var reader = new FileReader();
+            filename = makeid(7)
+            reader.onload = function () {
+                img_un_key = Image_Data_Directoty.push({
+                    url: reader.result
+
+                })
+                Image_Data_Directoty.child(img_un_key.key).update({
+                    filename: img_un_key.key
+                })
+                document.getElementById("uploaded_photos").innerHTML += `<div class="col" id="col_${img_un_key.key}">
+                <img src="${reader.result}" alt="" class="m-2 df" id="${img_un_key.key}"><br>
+                <button class="btn-sm btn-danger contri_btn" onclick="Remove_Image(${img_un_key.key})">Remove File</button>
     
-}
+            </div>`
 
-ques_category_data_div = document.createElement('div')
-ques_category_data_div.style.display = "none"
-ques_category_data_div.id = "div_ques_categories_specific"
-ques_category_data_div.innerHTML = htmlDecode("{{category_list_string}}")
-document.getElementById('ques_categories_encoded_data').appendChild(ques_category_data_div)
-jk = document.querySelectorAll("#div_ques_categories_specific > div > span")
-ques_categories_array = []
-for(let i = 0;i<jk.length;i++){
-    ques_categories_array.push(jk[i].innerText)
-}
+            }
+            reader.readAsDataURL(file);
+            window.scrollTo(0,document.body.scrollHeight);
 
-for(let i = 0;i<jk.length;i++){
-    ques_categories_array.push()
-    document.getElementById("ques_category_checkboxes").innerHTML+=`<div class="form-check">
+        }
+        else {
+
+        }
+
+    }
+
+    ques_category_data_div = document.createElement('div')
+    ques_category_data_div.style.display = "none"
+    ques_category_data_div.id = "div_ques_categories_specific"
+    ques_category_data_div.innerHTML = htmlDecode("{{category_list_string}}")
+    document.getElementById('ques_categories_encoded_data').appendChild(ques_category_data_div)
+    jk = document.querySelectorAll("#div_ques_categories_specific > div > span")
+    ques_categories_array = []
+    for (let i = 0; i < jk.length; i++) {
+        ques_categories_array.push(jk[i].innerText)
+    }
+
+    for (let i = 0; i < jk.length; i++) {
+        ques_categories_array.push()
+        document.getElementById("ques_category_checkboxes").innerHTML += `<div class="form-check">
         <input class="form-check-input qcopt" type="checkbox" value="${jk[i].innerText}" id="flexCheckDefault">
         <label class="form-check-label" for="flexCheckDefault">
           ${jk[i].innerText}
         </label>
       </div>`
-}
-
-var checkboxes_ques_ctegory = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]');
-checkboxes_ques_ctegory.forEach(checkbox_ques_ctegory => checkbox_ques_ctegory.addEventListener('change', () => {
-
-    if (checkbox_ques_ctegory.checked) {
-        user_selected_ques_categories.push(checkbox_ques_ctegory.value)
-        document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
     }
-    else {
-        _index = user_selected_ques_categories.indexOf(checkbox_ques_ctegory.value)
-        if(_index!=-1){
-            user_selected_ques_categories.splice(_index,1)
+
+    var checkboxes_ques_ctegory = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]');
+    checkboxes_ques_ctegory.forEach(checkbox_ques_ctegory => checkbox_ques_ctegory.addEventListener('change', () => {
+
+        if (checkbox_ques_ctegory.checked) {
+            user_selected_ques_categories.push(checkbox_ques_ctegory.value)
+            document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
         }
-        
-        document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
+        else {
+            _index = user_selected_ques_categories.indexOf(checkbox_ques_ctegory.value)
+            if (_index != -1) {
+                user_selected_ques_categories.splice(_index, 1)
+            }
+
+            document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
+
+        }
+
+
 
     }
+    ));
 
-
-
-}
-));
-
-lkhm =htmlDecode("{{question_data['Categories_Data_Array']}}");
-try{
-jkhg = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]')
-for(let i =0;i<jkhg.length;i++){
-    if(lkhm.includes(jkhg[i].value)){
-        user_selected_ques_categories.push(jkhg[i].value)
-        jkhg[i].checked = true
+    lkhm = htmlDecode("{{question_data['Categories_Data_Array']}}");
+    try {
+        jkhg = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]')
+        for (let i = 0; i < jkhg.length; i++) {
+            if (lkhm.includes(jkhg[i].value)) {
+                user_selected_ques_categories.push(jkhg[i].value)
+                jkhg[i].checked = true
+            }
+        }
     }
-}
-}
-catch(err){
-}
+    catch (err) {
+    }
 
 
 </script>
