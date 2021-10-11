@@ -256,7 +256,7 @@ def photo_upload(chapter_key,question_key):
                 })
             os.remove(f"images/{unique_id}.{file_ext}")
         except Exception as e:
-            print(e)      
+            pass     
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
