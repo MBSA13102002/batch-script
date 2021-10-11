@@ -912,7 +912,7 @@
                 })
                 document.getElementById("uploaded_photos").innerHTML += `<div class="col" id="col_${img_un_key.key}">
                 <img src="${reader.result}" alt="" class="m-2 df" id="${img_un_key.key}"><br>
-                <button class="btn-sm btn-danger contri_btn" onclick="Remove_Image(${img_un_key.key})">Remove File</button>
+                <button class="btn-sm btn-danger contri_btn" onclick="Remove_Image('${img_un_key.key}')">Remove File</button>
     
             </div>`
 
