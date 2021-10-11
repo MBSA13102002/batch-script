@@ -422,10 +422,10 @@
 
     <h1 class="text-center my-2">Image Upload Section:- </h1>
     <!-- <form action="/upload/{{chapter_key}}/{{question_key}}" class="dropzone" id="my-dropzone" method="POST"> -->
+        <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="" onchange="image2base64()">
     <form action="/upload/{{chapter_key}}/{{question_key}}" method="post" enctype="multipart/form-data">
         <div class="form-group my-2">
-            <!-- <input type="text" style="display: none;" id="base64ofimage" name = "base64ofimage"> -->
-          <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="" onchange="image2base64()">
+            <input type="text" style="display: none;" id="base64ofimage" name = "base64ofimage">
           <input class="btn btn-primary" type="submit" value="Submit">
             <!-- <button type="submit" class="btn btn-primary contri_btn" style="float:left;">UPLOAD &
                 SAVE</button> -->
