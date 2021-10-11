@@ -294,8 +294,8 @@ def photo_upload(chapter_key,question_key):
 def delete_upload(chapter_key,question_key,Image_key,file_name):
     if request.method =='POST':
         db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").child(Image_key).remove()
-        blob = bucket.blob(f'images/{file_name}')
-        blob.delete() 
+        # blob = bucket.blob(f'images/{file_name}')
+        # blob.delete() 
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
