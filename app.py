@@ -7,7 +7,7 @@ from firebase_admin import credentials,storage as strg
 cred = credentials.Certificate("./hackilo-edutech-firebase-adminsdk-dw3m5-2921e246f2.json")
 from firebase import Firebase
 from werkzeug.utils import secure_filename 
-# from PIL import Image
+from PIL import Image
 admin = firebase_admin.initialize_app(cred, {
       'storageBucket': 'hackilo-edutech.appspot.com'})
 def rand_pass():
@@ -238,23 +238,51 @@ def photo_upload(chapter_key,question_key):
     if request.method =='POST':
         try:
             my_files = request.files['files']       
+            # for item in my_files: 
+            #     uploaded_file = my_files.get(item)  
+            #     uploaded_file.filename = secure_filename(uploaded_file.filename)        
+            #     if uploaded_file.filename != '':            
+            #         file_ext = os.path.splitext(uploaded_file.filename)[1]           
+            #     if file_ext not in app.config['UPLOAD_EXTENSIONS']:            
+            #         abort(400)         
+            #     unique_id =  rand_pass()
+            #     uploaded_file.save(unique_id)  
+            #     storage.child(f"images/{unique_id}").put(unique_id)
+            #     db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
+            #         "url":storage.child(f"images/{unique_id}").get_url(None),
+            #         "filename":unique_id
+            #         })
+            #     os.remove(unique_id)
+            # unique_id =  rand_pass()
+            # my_files.save(unique_id)  
+            # storage.child(f"images/{unique_id}").put(unique_id)
+            # db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
+            #     "url":storage.child(f"images/{unique_id}").get_url(None),
+            #     "filename":unique_id
+            #     })
+            # os.remove(unique_id)
             unique_id =  rand_pass()
             file_ext = my_files.filename.split(".")[1]
-            my_files.save(f"{unique_id}.{file_ext}") 
+            my_files.save(f"images/{unique_id}.{file_ext}") 
     # compressing the image from local storage start
-#             picture = Image.open(f"images/{unique_id}.{file_ext}")
+            picture = Image.open(f"images/{unique_id}.{file_ext}")
                 
-  
-#             picture.save(f"images/{unique_id}.{file_ext}", 
-#                             optimize = True, 
-#                             quality = 10) 
+            # Save the picture with desired quality
+            # To change the quality of image,
+            # set the quality variable at
+            # your desired level, The more 
+            # the value of quality variable 
+            # and lesser the compression
+            picture.save(f"images/{unique_id}.{file_ext}", 
+                            optimize = True, 
+                            quality = 10) 
     # compressing the image from local storage end
-            storage.child(f"images/{unique_id}.{file_ext}").put(f"{unique_id}.{file_ext}")
+            storage.child(f"images/{unique_id}.{file_ext}").put(f"images/{unique_id}.{file_ext}")
             db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
                 "url":storage.child(f"images/{unique_id}.{file_ext}").get_url(None),
                 "filename":unique_id+'.'+file_ext
                 })
-            os.remove(f"{unique_id}.{file_ext}")
+            os.remove(f"images/{unique_id}.{file_ext}")
         except Exception as e:
             pass     
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
