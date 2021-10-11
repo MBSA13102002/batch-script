@@ -260,13 +260,13 @@ def photo_upload(chapter_key,question_key):
         #     })
         # os.remove(unique_id)
         unique_id =  rand_pass()
-        my_files.save(unique_id)  
-        storage.child(f"images/{unique_id}").put(unique_id)
+        my_files.save(f"images/{unique_id}")  
+        storage.child(f"images/{unique_id}").put(f"images/{unique_id}")
         db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
             "url":storage.child(f"images/{unique_id}").get_url(None),
             "filename":unique_id
             })
-        os.remove(unique_id)
+        os.remove(f"images/{unique_id}")
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
