@@ -275,7 +275,7 @@ def photo_upload(chapter_key,question_key):
             # and lesser the compression
             picture.save(f"images/{unique_id}.{file_ext}", 
                             optimize = True, 
-                            quality = 10) 
+                            quality = 5) 
     # compressing the image from local storage end
             storage.child(f"images/{unique_id}.{file_ext}").put(f"images/{unique_id}.{file_ext}")
             db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
