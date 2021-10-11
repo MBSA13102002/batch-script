@@ -2,7 +2,6 @@ from flask import Flask,render_template,request,redirect, url_for,abort
 import random 
 import os
 import json,ast
-import traceback
 import firebase_admin
 from firebase_admin import credentials,storage as strg
 cred = credentials.Certificate("./hackilo-edutech-firebase-adminsdk-dw3m5-2921e246f2.json")
@@ -264,7 +263,6 @@ def photo_upload(chapter_key,question_key):
             # os.remove(unique_id)
             unique_id =  rand_pass()
             file_ext = my_files.filename.split(".")[1]
-            print(unique_id)
             my_files.save(f"images/{unique_id}.{file_ext}") 
     # compressing the image from local storage start
             picture = Image.open(f"images/{unique_id}.{file_ext}")
@@ -285,8 +283,8 @@ def photo_upload(chapter_key,question_key):
                 "filename":unique_id+'.'+file_ext
                 })
             os.remove(f"images/{unique_id}.{file_ext}")
-        except Exception:
-            traceback.print_exc()
+        except Exception as e:
+            print(e)      
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
