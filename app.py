@@ -2,11 +2,13 @@ from flask import Flask,render_template,request,redirect, url_for,abort
 import random 
 import os
 import json,ast
+import traceback
 import firebase_admin
 from firebase_admin import credentials,storage as strg
 cred = credentials.Certificate("./hackilo-edutech-firebase-adminsdk-dw3m5-2921e246f2.json")
 from firebase import Firebase
 from werkzeug.utils import secure_filename 
+from PIL import Image
 admin = firebase_admin.initialize_app(cred, {
       'storageBucket': 'hackilo-edutech.appspot.com'})
 def rand_pass():
@@ -260,13 +262,31 @@ def photo_upload(chapter_key,question_key):
         #     })
         # os.remove(unique_id)
         unique_id =  rand_pass()
-        my_files.save(f"images/{unique_id}")  
-        storage.child(f"images/{unique_id}").put(f"images/{unique_id}")
-        db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
-            "url":storage.child(f"images/{unique_id}").get_url(None),
-            "filename":unique_id
-            })
-        os.remove(f"images/{unique_id}")
+        file_ext = my_files.filename.split(".")[1]
+        print(unique_id)
+        my_files.save(f"images/{unique_id}.{file_ext}") 
+# compressing the image from local storage start
+        picture = Image.open(f"images/{unique_id}.{file_ext}")
+            
+        # Save the picture with desired quality
+        # To change the quality of image,
+        # set the quality variable at
+        # your desired level, The more 
+        # the value of quality variable 
+        # and lesser the compression
+        picture.save(f"images/{unique_id}.{file_ext}", 
+                        optimize = True, 
+                        quality = 10) 
+# compressing the image from local storage end
+        try:
+            storage.child(f"images/{unique_id}.{file_ext}").put(f"images/{unique_id}.{file_ext}")
+            db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
+                "url":storage.child(f"images/{unique_id}.{file_ext}").get_url(None),
+                "filename":unique_id+'.'+file_ext
+                })
+            os.remove(f"images/{unique_id}.{file_ext}")
+        except Exception:
+            traceback.print_exc()
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
