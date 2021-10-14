@@ -7,7 +7,6 @@ from firebase_admin import credentials,storage as strg
 cred = credentials.Certificate("./hackilo-edutech-firebase-adminsdk-dw3m5-2921e246f2.json")
 from firebase import Firebase
 from werkzeug.utils import secure_filename 
-from PIL import Image
 admin = firebase_admin.initialize_app(cred, {
       'storageBucket': 'hackilo-edutech.appspot.com'})
 def rand_pass():
@@ -90,6 +89,7 @@ def chapter_details(chapter_key):
             "Question_Type":Question_Type,
             "Question_ID":id,
             "Question_Level":"",
+            "Question_IdealTime":0,
             "OPT_JSON":" ",
             "Topics_List":" ",
             "Explanation":" "
@@ -169,6 +169,7 @@ def question_detail(chapter_key,question_key):
         Question_Ids=request.form.get("Question_Tag_Ids")
         Options_Ids=request.form.get("Options_Tag_Ids")
         Explanation = request.form.get("Explanation")
+        Question_IdealTime = request.form.get("Question_IdealTime")
         # y = json.loads(Options_Ids)
         if Options_Ids!="":
             y = ast.literal_eval(Options_Ids)
@@ -187,7 +188,8 @@ def question_detail(chapter_key,question_key):
             "Question_Type":Question_Type,
             "TAG_Ids":Question_Ids,
             "OPT_JSON":y,
-            "Explanation":Explanation
+            "Explanation":Explanation,
+            "Question_IdealTime":int(Question_IdealTime)
            
 
             
@@ -236,56 +238,38 @@ def question_category_add(chapter_key,question_key):
 @app.route("/upload/<string:chapter_key>/<string:question_key>/",methods = ['GET','POST'])
 def photo_upload(chapter_key,question_key):
     if request.method =='POST':
-        try:
-            # my_files = request.files['files']  
-            base64 = request.form.get("base64ofimage")     
-            # for item in my_files: 
-            #     uploaded_file = my_files.get(item)  
-            #     uploaded_file.filename = secure_filename(uploaded_file.filename)        
-            #     if uploaded_file.filename != '':            
-            #         file_ext = os.path.splitext(uploaded_file.filename)[1]           
-            #     if file_ext not in app.config['UPLOAD_EXTENSIONS']:            
-            #         abort(400)         
-            #     unique_id =  rand_pass()
-            #     uploaded_file.save(unique_id)  
-            #     storage.child(f"images/{unique_id}").put(unique_id)
-            #     db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
-            #         "url":storage.child(f"images/{unique_id}").get_url(None),
-            #         "filename":unique_id
-            #         })
-            #     os.remove(unique_id)
-            # unique_id =  rand_pass()
-            # my_files.save(unique_id)  
-            # storage.child(f"images/{unique_id}").put(unique_id)
-            # db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
-            #     "url":storage.child(f"images/{unique_id}").get_url(None),
-            #     "filename":unique_id
-            #     })
-            # os.remove(unique_id)
-            unique_id =  rand_pass()
-            # file_ext = my_files.filename.split(".")[1]
-            # my_files.save(f"images/{unique_id}.{file_ext}") 
-    # compressing the image from local storage start
-            # picture = Image.open(f"images/{unique_id}.{file_ext}")
-                
-            # Save the picture with desired quality
-            # To change the quality of image,
-            # set the quality variable at
-            # your desired level, The more 
-            # the value of quality variable 
-            # and lesser the compression
-            # picture.save(f"images/{unique_id}.{file_ext}", 
-            #                 optimize = True, 
-            #                 quality = 10) 
-    # compressing the image from local storage end
-            # storage.child(f"images/{unique_id}.{file_ext}").put(f"images/{unique_id}.{file_ext}")
-            db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
-                "url":base64,
-                "filename":unique_id
-                })
-            # os.remove(f"images/{unique_id}.{file_ext}")
-        except Exception as e:
-            pass     
+        my_files = request.files['files']       
+        # for item in my_files: 
+        #     uploaded_file = my_files.get(item)  
+        #     uploaded_file.filename = secure_filename(uploaded_file.filename)        
+        #     if uploaded_file.filename != '':            
+        #         file_ext = os.path.splitext(uploaded_file.filename)[1]           
+        #     if file_ext not in app.config['UPLOAD_EXTENSIONS']:            
+        #         abort(400)         
+        #     unique_id =  rand_pass()
+        #     uploaded_file.save(unique_id)  
+        #     storage.child(f"images/{unique_id}").put(unique_id)
+        #     db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
+        #         "url":storage.child(f"images/{unique_id}").get_url(None),
+        #         "filename":unique_id
+        #         })
+        #     os.remove(unique_id)
+        # unique_id =  rand_pass()
+        # my_files.save(unique_id)  
+        # storage.child(f"images/{unique_id}").put(unique_id)
+        # db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
+        #     "url":storage.child(f"images/{unique_id}").get_url(None),
+        #     "filename":unique_id
+        #     })
+        # os.remove(unique_id)
+        unique_id =  rand_pass()
+        my_files.save(unique_id)  
+        storage.child(f"images/{unique_id}").put(unique_id)
+        db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").push({
+            "url":storage.child(f"images/{unique_id}").get_url(None),
+            "filename":unique_id
+            })
+        os.remove(unique_id)
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
@@ -294,8 +278,8 @@ def photo_upload(chapter_key,question_key):
 def delete_upload(chapter_key,question_key,Image_key,file_name):
     if request.method =='POST':
         db.child("Chapter_List").child(chapter_key).child("Question_List").child(question_key).child("Images").child(Image_key).remove()
-        # blob = bucket.blob(f'images/{file_name}')
-        # blob.delete() 
+        blob = bucket.blob(f'images/{file_name}')
+        blob.delete() 
         return redirect(url_for('question_detail',chapter_key=chapter_key,question_key=question_key))
 
 
@@ -307,14 +291,14 @@ def chapter_delete(chapter_key):
     for item in Chapter_Data.each():
         if (item.key()==chapter_key):
             # ===================================IMAGE REMOVAL=====================
-            # try:
-            #     for key in item.val()["Question_List"].keys():
-            #         for key_,value_ in item.val()["Question_List"][key]["Images"].items():
-            #             img_name = value_["filename"]
-            #             blob = bucket.blob(f'images/{img_name}')
-            #             blob.delete() 
-            # except:
-            #     pass
+            try:
+                for key in item.val()["Question_List"].keys():
+                    for key_,value_ in item.val()["Question_List"][key]["Images"].items():
+                        img_name = value_["filename"]
+                        blob = bucket.blob(f'images/{img_name}')
+                        blob.delete() 
+            except:
+                pass
             # =======================================================================
             db.child("Chapter_List").child(chapter_key).remove()
             return redirect(url_for('home'))
@@ -340,19 +324,20 @@ def question_delete(chapter_key_first,chapter_key,question_key):
              for key in item.val()["Question_List"].keys():
                     if(key==question_key):
                         # ===============================================================
-                        # try:
-                        #     for key_,value_ in item.val()["Question_List"][key]["Images"].items():
-                        #         img_name = value_["filename"]
-                        #         blob = bucket.blob(f'images/{img_name}')
-                        #         blob.delete() 
-                        # except:
-                        #     pass
+                        try:
+                            for key_,value_ in item.val()["Question_List"][key]["Images"].items():
+                                img_name = value_["filename"]
+                                blob = bucket.blob(f'images/{img_name}')
+                                blob.delete() 
+                        except:
+                            pass
                         # ===============================================================
                         db.child("Chapter_List").child(chapter_key).child("Question_List").child(key).remove()
                         number = db.child("Chapter_List").child(chapter_key).child("No_of_Questions").get()
                         db.child("Chapter_List").child(chapter_key).child("No_of_Questions").set(number.val()-1)
                         return redirect(url_for('chapter_details',chapter_key=chapter_key))
             # return render_template("index.html",Chapter_List = db.child("Chapter_List").get(),handle_catch=handle_catch)
+
 
 
 
