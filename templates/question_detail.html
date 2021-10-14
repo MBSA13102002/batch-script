@@ -270,6 +270,15 @@
                         {% endfor %}
                     </select> -->
                 </div>
+                <div class="mb-3">
+
+                    <label for="formGroupExampleInput" class="form-label fnt"><b>IDEAL TIME(in mins):-</b></label>
+                    <!-- <label type="text" class="form-control contri"
+                        style="text-align:left">{{question_data['Question_Type']}}</label> -->
+                    <input type="number" class="form-control contri" name="Question_IdealTime"
+                        value="{{question_data['Question_IdealTime']}}">
+
+                </div>
                 <div class="mb-3" style="display: none;">
                     <label for="formGroupExampleInput" class="form-label"><b>QUESTION IDS:-</b></label>
                     <input type="text" class="form-control fnt" id="tagids" name="Question_Tag_Ids"
@@ -443,15 +452,15 @@
     </form>
 
     <h1 class="text-center my-2">Image Upload Section:- </h1>
-    <form action="" onsubmit="return false">
-
+    <!-- <form action="/upload/{{chapter_key}}/{{question_key}}" class="dropzone" id="my-dropzone" method="POST"> -->
+    <form action="/upload/{{chapter_key}}/{{question_key}}" method="post" enctype="multipart/form-data">
         <div class="form-group my-2">
-            <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="images_upload">
-            <input type="submit" class="btn btn-primary" value="Submit" onclick="Add_Image()">
-    
+            <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="">
+            <input class="btn btn-primary" type="submit" value="Submit">
+            <!-- <button type="submit" class="btn btn-primary contri_btn" style="float:left;">UPLOAD &
+                SAVE</button> -->
         </div>
     </form>
-
     <style>
         .df {
             width: 150px;
@@ -459,16 +468,19 @@
         }
     </style>
     <h1 class="text-center my-2">Already Uploaded Photos:-</h1>
-    <div class="row my-2" id="uploaded_photos">
+    <div class="row my-2">
         {% call catch('') %}
         {% for item in img_data.each()%}
-        <div class="col" id="col_{{item.val()['filename']}}">
-            <img src="{{item.val()['url']}}" alt="" class="m-2 df" id="{{item.val()['filename']}}"><br>
+        <div class="col">
+            <img src="{{item.val()['url']}}" alt="" class="m-2 df"><br>
             {% set filename = item.val['filename'] %}
-            <button class="btn-sm btn-danger contri_btn" onclick="Remove_Image(`{{item.val()['filename']}}`)">Remove
-                File</button>
-
+            <form onsubmit="return validate(this);"
+                action="/delete/{{chapter_key}}/{{question_key}}/{{item.key()}}/{{item.val()['filename']}}"
+                method="POST">
+                <button type="submit" class="btn-sm btn-danger contri_btn">Remove File</button>
+            </form>
         </div>
+
         {% endfor %}
         {% endcall %}
     </div>
@@ -534,25 +546,7 @@
         }
     };*/
 </script>
-<script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js></script>
-<script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js></script>
-<script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-analytics.js></script>
-<script>
-    var firebaseConfig = {
-        apiKey: "AIzaSyA1h6NqVizacIpvyUExiPzUy7LKbT5VV4c",
-        authDomain: "hackilo-edutech.firebaseapp.com",
-        projectId: "hackilo-edutech",
-        storageBucket: "hackilo-edutech.appspot.com",
-        messagingSenderId: "432434540165",
-        appId: "1:432434540165:web:e364ec66e0ae0e8e6cc3ec",
-        measurementId: "G-HVEVSTM0XC"
-    };
-    firebase.initializeApp(firebaseConfig);
-
-</script>
 <script defer>
-
-
 
 
     var options = {
@@ -869,63 +863,6 @@
     }
     function filter_levels(elem) {
         document.getElementById("question_level").value = elem.value
-    }
-    function image2base64() {
-        var file = document.querySelector(
-            'input[type=file]')['files'][0];
-        var reader = new FileReader();
-        reader.onload = function () {
-            document.getElementById("base64ofimage").value = reader.result
-
-        }
-        reader.readAsDataURL(file);
-
-    }
-    function Remove_Image(str) {
-        confirmation = confirm("Are You Sure?")
-        if (confirmation) {
-            var Image_Data_Directoty_Removal = firebase.database().ref("Chapter_List").child("{{chapter_key}}").child("Question_List").child("{{question_key}}").child("Images").child(str)
-            Image_Data_Directoty_Removal.remove()
-            document.getElementById(`col_${str}`).remove()
-
-        }
-        else {
-
-        }
-    }
-    function Add_Image() {
-        a = confirm("Add the Image?")
-        if (a) {
-
-            var Image_Data_Directoty = firebase.database().ref("Chapter_List").child("{{chapter_key}}").child("Question_List").child("{{question_key}}").child("Images")
-            var file = document.querySelector(
-                'input[type=file]')['files'][0];
-            var reader = new FileReader();
-            filename = makeid(7)
-            reader.onload = function () {
-                img_un_key = Image_Data_Directoty.push({
-                    url: reader.result
-
-                })
-                Image_Data_Directoty.child(img_un_key.key).update({
-                    filename: img_un_key.key
-                })
-                document.getElementById("uploaded_photos").innerHTML += `<div class="col" id="col_${img_un_key.key}">
-                <img src="${reader.result}" alt="" class="m-2 df" id="${img_un_key.key}"><br>
-                <button class="btn-sm btn-danger contri_btn" onclick="Remove_Image('${img_un_key.key}')">Remove File</button>
-    
-            </div>`
-            document.getElementById("images_upload").value = ""
-
-            }
-            reader.readAsDataURL(file);
-            window.scrollTo(0,document.body.scrollHeight);
-
-        }
-        else {
-
-        }
-
     }
 
     ques_category_data_div = document.createElement('div')
