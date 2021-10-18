@@ -452,16 +452,12 @@
     </form>
 
     <h1 class="text-center my-2">Image Upload Section:- </h1>
-    <!-- <form action="/upload/{{chapter_key}}/{{question_key}}" class="dropzone" id="my-dropzone" method="POST"> -->
-    <form action="/upload/{{chapter_key}}/{{question_key}}" method="post" enctype="multipart/form-data">
-        <div class="form-group my-2">
-            <input type="text" id="question_pic" name="base64data" style="display: none;">
-            <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="" onchange="imageUploaded()">
-            <input class="btn btn-primary" type="submit" value="Submit">
-            <!-- <button type="submit" class="btn btn-primary contri_btn" style="float:left;">UPLOAD &
-                SAVE</button> -->
-        </div>
-    </form>
+    <div class="form-group my-2">
+        <!-- <input type="text" id="question_pic" name="base64data" style="display: none;"> -->
+        <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="" onchange="imageUploaded()">
+        
+    </div>
+
     <style>
         .df {
             width: 150px;
@@ -469,7 +465,7 @@
         }
     </style>
     <h1 class="text-center my-2">Already Uploaded Photos:-</h1>
-    <div class="row my-2">
+    <div class="row my-2" id="already_uploaded_base64data">
         {% call catch('') %}
         {% for item in img_data.each()%}
         <div class="col">
@@ -511,87 +507,135 @@
     <div id="ques_categories_encoded_data">
 
     </div>
-</body>
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-
-<!-- Initialize Quill editor -->
-<script>
-    var quill = new Quill('#editor_exp', {
-        theme: 'snow'
-    });
-</script>
-
-<script defer>
-
-
-    var options = {
-    }
 
 
 
-    var tag_id_list = [];
+    <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js></script>
+    <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js></script>
+    <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-analytics.js></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyA1h6NqVizacIpvyUExiPzUy7LKbT5VV4c",
+            authDomain: "hackilo-edutech.firebaseapp.com",
+            projectId: "hackilo-edutech",
+            storageBucket: "hackilo-edutech.appspot.com",
+            messagingSenderId: "432434540165",
+            appId: "1:432434540165:web:e364ec66e0ae0e8e6cc3ec",
+            measurementId: "G-HVEVSTM0XC"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
+    <!-- Initialize Quill editor -->
+    <script>
+        var quill = new Quill('#editor_exp', {
+            theme: 'snow'
+        });
+    </script>
 
-    const new_arr = document.getElementById("tagids").value.split(",")
-    for (var i = 0; i < new_arr.length; i++) {
-        if (new_arr[i] != " " && new_arr[i] != "") {
-            tag_id_list.push(new_arr[i])
+    <script defer>
+        function imageUploaded() {
+           
+            var file = document.querySelector(
+                'input[type=file]')['files'][0];
+            var reader = new FileReader();             
+                reader.readAsDataURL(file);
+                filename = makeid(10)
+                reader.onload = function () {
+                    base64String = reader.result;
+                    let CallClicks_New = firebase.database().ref("Chapter_List").child("{{chapter_key}}").child("Question_List").child("{{question_key}}").child("Images");
+                    qwerty = CallClicks_New.push({
+                       url:base64String,
+                       filename:filename
+                    });
+                    alert("Uploaded")
+                    document.getElementById("already_uploaded_base64data").innerHTML += `
+                    <div class="col">
+                        <img src="${base64String}" alt="" class="m-2 df"><br>
+                        <form onsubmit="return validate(this);"
+                            action="/delete/{{chapter_key}}/{{question_key}}/${qwerty.key}/${filename}"
+                            method="POST">
+                            <button type="submit" class="btn-sm btn-danger contri_btn">Remove File</button>
+                        </form>
+                    </div>
+    `
+  
+            
+             
+                }
+
         }
-    }
-    function makeid(length) {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() *
-                charactersLength));
+
+
+        var options = {
         }
-        return result;
-    }
 
 
 
-
-    function add_tag() {
-        unique_id = makeid(5)
-        tag_div = document.getElementById("tags_question");
-        tag_input = document.getElementById("tag_input").value
-        tag_div.innerHTML += ` <span id="${unique_id}" class="badge bg-primary mx-1">#${tag_input}<i  onclick = "remove_tag('${unique_id}','${tag_input}')" class="fa fa-times mx-1" style = "cursor: pointer;"></i></span>`
-        tag_id_list.push(tag_input);
-        document.getElementById("tagids").value += tag_input + ',';
-        document.getElementById("tag_input").value = '';
+        var tag_id_list = [];
 
 
-    }
-
-    function remove_tag(tag_id, tag_input) {
-        document.getElementById(tag_id).remove()
-        index = tag_id_list.indexOf(tag_input)
-        console.log(index)
-        console.log(typeof tag_input)
-        if (index > -1) {
-            tag_id_list.splice(index, 1);
+        const new_arr = document.getElementById("tagids").value.split(",")
+        for (var i = 0; i < new_arr.length; i++) {
+            if (new_arr[i] != " " && new_arr[i] != "") {
+                tag_id_list.push(new_arr[i])
+            }
         }
-        document.getElementById("tagids").value = tag_id_list + ',';
-    }
+        function makeid(length) {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() *
+                    charactersLength));
+            }
+            return result;
+        }
 
-    function add_option() {
-        opt_id = makeid(10)
-        input_option = document.getElementById("opt_input").value
-        div_options_single = document.getElementById("ques_options_single")
-        div_options_multiple = document.getElementById("ques_options_multiple")
-        if ("{{question_data['Question_Type']}}" == "Single Correct") {
 
-            div_options_single.innerHTML += ` <div id="div_${opt_id}" class="form-check">
+
+
+        function add_tag() {
+            unique_id = makeid(5)
+            tag_div = document.getElementById("tags_question");
+            tag_input = document.getElementById("tag_input").value
+            tag_div.innerHTML += ` <span id="${unique_id}" class="badge bg-primary mx-1">#${tag_input}<i  onclick = "remove_tag('${unique_id}','${tag_input}')" class="fa fa-times mx-1" style = "cursor: pointer;"></i></span>`
+            tag_id_list.push(tag_input);
+            document.getElementById("tagids").value += tag_input + ',';
+            document.getElementById("tag_input").value = '';
+
+
+        }
+
+        function remove_tag(tag_id, tag_input) {
+            document.getElementById(tag_id).remove()
+            index = tag_id_list.indexOf(tag_input)
+            console.log(index)
+            console.log(typeof tag_input)
+            if (index > -1) {
+                tag_id_list.splice(index, 1);
+            }
+            document.getElementById("tagids").value = tag_id_list + ',';
+        }
+
+        function add_option() {
+            opt_id = makeid(10)
+            input_option = document.getElementById("opt_input").value
+            div_options_single = document.getElementById("ques_options_single")
+            div_options_multiple = document.getElementById("ques_options_multiple")
+            if ("{{question_data['Question_Type']}}" == "Single Correct") {
+
+                div_options_single.innerHTML += ` <div id="div_${opt_id}" class="form-check">
                 <input class="form-check-input mb" type="radio" value="${input_option}" name="flexRadioDefault" id="${opt_id}"
                     >
                 <label class="form-check-label form-control" for="flexRadioDefault" style="width:95%;display:inline-block;text-align:left">${input_option}</label>
                 <i class="fa fa-times-circle"  aria-hidden="true" onclick = "remove_opt('${opt_id}')" style="font-size: 20px;cursor:pointer"></i>
             </div> 
             `
-        }
-        else if ("{{question_data['Question_Type']}}" == "Multiple Correct") {
-            div_options_multiple.innerHTML += ` <div id="div_${opt_id}" class="form-check">
+            }
+            else if ("{{question_data['Question_Type']}}" == "Multiple Correct") {
+                div_options_multiple.innerHTML += ` <div id="div_${opt_id}" class="form-check">
                 <input class="form-check-input mb" type="checkbox" value="${input_option}" name="flexRadioDefault" id="${opt_id}"
                     >
                 <label class="form-check-label form-control" for="flexRadioDefault" style="width:95%;display:inline-block;text-align:left">${input_option}</label>
@@ -599,14 +643,148 @@
             </div> 
             `
 
+            }
+            options[opt_id.toString()] = {
+                "opt": input_option,
+                "ans": "false"
+            }
+            document.getElementById("optids").value = JSON.stringify(options);
+            document.getElementById("opt_input").value = ""
+            //===============================================================================
+            var radios = document.querySelectorAll('input[type=radio][class="form-check-input mb"]');
+            radios.forEach(radio => radio.addEventListener('change', () => {
+                temp = radio.id
+                radios.forEach(radio_temp => {
+                    if (radio_temp.id == temp) {
+                        options[temp]["ans"] = "true"
+
+                    }
+                    else {
+                        options[radio_temp.id]["ans"] = "false"
+
+                    }
+                })
+                document.getElementById("optids").value = JSON.stringify(options);
+
+
+            }
+            ));
+            //=========================================================================
+            var checkboxes = document.querySelectorAll('input[type=checkbox][class="form-check-input mb"]');
+            checkboxes.forEach(checkbox => checkbox.addEventListener('change', () => {
+                temp = checkbox.id
+                if (checkbox.checked) {
+                    options[temp]["ans"] = "true"
+                }
+                else {
+                    options[temp]["ans"] = "false"
+
+                }
+                document.getElementById("optids").value = JSON.stringify(options);
+
+
+            }
+            ));
+            //======================================================================================
         }
-        options[opt_id.toString()] = {
-            "opt": input_option,
-            "ans": "false"
+
+
+        function remove_opt(key) {
+            document.getElementById("div_" + key).remove()
+            delete options[key]
+            document.getElementById("optids").value = JSON.stringify(options);
         }
-        document.getElementById("optids").value = JSON.stringify(options);
-        document.getElementById("opt_input").value = ""
-        //===============================================================================
+
+        var topics = {
+
+        }
+
+
+
+
+        function maketopic(element) {
+            unique_id = makeid(10)
+            document.getElementById("topicids").innerHTML += `<span id='${unique_id}' class="badge bg-primary my-1 mx-2" style="text-align:left">${element.value}<i onclick="remove_topic('${unique_id}','${element.value}')" class="fa fa-times mx-1" style = "cursor: pointer;"></i></span>`
+            topics[unique_id.toString()] = element.value
+            $(`#topics option[value='${element.value}']`).remove();
+            document.getElementById("topics_values").value = JSON.stringify(topics);
+
+
+        }
+        function remove_topic(id, str) {
+            document.getElementById(id).remove()
+            var x = document.getElementById("topics");
+            var option = document.createElement("option");
+            option.text = str;
+            option.value = str;
+            x.add(option);
+            delete topics[id]
+            document.getElementById("topics_values").value = JSON.stringify(topics);
+        }
+
+        numerical_ans_id = makeid(10);
+        if ("{{question_data['Question_Type']}}" == "Single Correct" || "{{question_data['Question_Type']}}" == "Multiple Correct") {
+            ms = document.getElementById("optids").value
+            ms = ms.replace(/'/g, '"')
+            try {
+                d = JSON.parse(ms)
+                options = d;
+            }
+            catch (err) {
+                console.log(err)
+            }
+
+        }
+        else if ("{{question_data['Question_Type']}}" == "True &amp; False") {
+
+            if ("{{tf_opt}}" == "false") {
+                ms = document.getElementsByClassName("mb")
+                for (var i = 0; i < ms.length; i++) {
+                    options[ms[i].id] = {
+                        "opt": ms[i].value,
+                        "ans": "false"
+                    }
+                }
+                document.getElementById("optids").value = JSON.stringify(options);
+            }
+            else {
+                ms = document.getElementById("optids").value
+                ms = ms.replace(/'/g, '"')
+                d = JSON.parse(ms)
+                options = d;
+
+            }
+        }
+
+        else if ("{{question_data['Question_Type']}}" == "Numerical Type") {
+            num_ans = document.getElementById("numerical_ans")
+            num_ans.addEventListener('input', function () {
+                options[numerical_ans_id.toString()] = {
+                    "ans": num_ans.value,
+
+                }
+                document.getElementById("optids").value = JSON.stringify(options);
+            })
+        }
+        //======================================TOPICS LIST SERVER FUNCTIONS ==========================================
+        try {
+            topic_names_server = document.getElementById("topics_values").value
+            topic_names_server = topic_names_server.replace(/'/g, '"')
+            topic_names_server_JSON = JSON.parse(topic_names_server)
+            topics = topic_names_server_JSON;
+            for (const [key, value] of Object.entries(topics)) {
+                $(`#topics option[value='${value}']`).remove();
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+
+
+
+
+        //================================================================================
+        //==========================================================single radio boxes listener start====================
         var radios = document.querySelectorAll('input[type=radio][class="form-check-input mb"]');
         radios.forEach(radio => radio.addEventListener('change', () => {
             temp = radio.id
@@ -619,13 +797,15 @@
                     options[radio_temp.id]["ans"] = "false"
 
                 }
+
             })
             document.getElementById("optids").value = JSON.stringify(options);
 
 
         }
         ));
-        //=========================================================================
+        //==========================================================single radio boxes listener end====================
+        //==========================================================multiple checkboxes boxes listener start====================
         var checkboxes = document.querySelectorAll('input[type=checkbox][class="form-check-input mb"]');
         checkboxes.forEach(checkbox => checkbox.addEventListener('change', () => {
             temp = checkbox.id
@@ -641,284 +821,133 @@
 
         }
         ));
-        //======================================================================================
-    }
+        //==========================================================multiple checkboxes boxes listener end====================
+        function validate(form) {
 
+            result = confirm("Are you sure to delete this file from the Question?")
+            if (result == true) {
+                return true
 
-    function remove_opt(key) {
-        document.getElementById("div_" + key).remove()
-        delete options[key]
-        document.getElementById("optids").value = JSON.stringify(options);
-    }
-
-    var topics = {
-
-    }
-
-
-
-
-    function maketopic(element) {
-        unique_id = makeid(10)
-        document.getElementById("topicids").innerHTML += `<span id='${unique_id}' class="badge bg-primary my-1 mx-2" style="text-align:left">${element.value}<i onclick="remove_topic('${unique_id}','${element.value}')" class="fa fa-times mx-1" style = "cursor: pointer;"></i></span>`
-        topics[unique_id.toString()] = element.value
-        $(`#topics option[value='${element.value}']`).remove();
-        document.getElementById("topics_values").value = JSON.stringify(topics);
-
-
-    }
-    function remove_topic(id, str) {
-        document.getElementById(id).remove()
-        var x = document.getElementById("topics");
-        var option = document.createElement("option");
-        option.text = str;
-        option.value = str;
-        x.add(option);
-        delete topics[id]
-        document.getElementById("topics_values").value = JSON.stringify(topics);
-    }
-
-    numerical_ans_id = makeid(10);
-    if ("{{question_data['Question_Type']}}" == "Single Correct" || "{{question_data['Question_Type']}}" == "Multiple Correct") {
-        ms = document.getElementById("optids").value
-        ms = ms.replace(/'/g, '"')
-        try {
-            d = JSON.parse(ms)
-            options = d;
-        }
-        catch (err) {
-            console.log(err)
-        }
-
-    }
-    else if ("{{question_data['Question_Type']}}" == "True &amp; False") {
-
-        if ("{{tf_opt}}" == "false") {
-            ms = document.getElementsByClassName("mb")
-            for (var i = 0; i < ms.length; i++) {
-                options[ms[i].id] = {
-                    "opt": ms[i].value,
-                    "ans": "false"
-                }
-            }
-            document.getElementById("optids").value = JSON.stringify(options);
-        }
-        else {
-            ms = document.getElementById("optids").value
-            ms = ms.replace(/'/g, '"')
-            d = JSON.parse(ms)
-            options = d;
-
-        }
-    }
-
-    else if ("{{question_data['Question_Type']}}" == "Numerical Type") {
-        num_ans = document.getElementById("numerical_ans")
-        num_ans.addEventListener('input', function () {
-            options[numerical_ans_id.toString()] = {
-                "ans": num_ans.value,
-
-            }
-            document.getElementById("optids").value = JSON.stringify(options);
-        })
-    }
-    //======================================TOPICS LIST SERVER FUNCTIONS ==========================================
-    try {
-        topic_names_server = document.getElementById("topics_values").value
-        topic_names_server = topic_names_server.replace(/'/g, '"')
-        topic_names_server_JSON = JSON.parse(topic_names_server)
-        topics = topic_names_server_JSON;
-        for (const [key, value] of Object.entries(topics)) {
-            $(`#topics option[value='${value}']`).remove();
-        }
-    }
-    catch (err) {
-        console.log(err)
-    }
-
-
-
-
-    //================================================================================
-    //==========================================================single radio boxes listener start====================
-    var radios = document.querySelectorAll('input[type=radio][class="form-check-input mb"]');
-    radios.forEach(radio => radio.addEventListener('change', () => {
-        temp = radio.id
-        radios.forEach(radio_temp => {
-            if (radio_temp.id == temp) {
-                options[temp]["ans"] = "true"
 
             }
             else {
-                options[radio_temp.id]["ans"] = "false"
+                return false
+            }
+        }
+        function validate_options(form) {
+
+
+            if (JSON.stringify(options) == '{}') {
+                alert("You have not added any Options!!!")
+                return false
+
 
             }
+            else {
+                var myEditor = document.querySelector('#editor_exp')
+                var html = myEditor.children[0].innerHTML
+                document.getElementById("ques_explanation").value = html;
+                return true
+            }
+        }
 
-        })
-        document.getElementById("optids").value = JSON.stringify(options);
-
-
-    }
-    ));
-    //==========================================================single radio boxes listener end====================
-    //==========================================================multiple checkboxes boxes listener start====================
-    var checkboxes = document.querySelectorAll('input[type=checkbox][class="form-check-input mb"]');
-    checkboxes.forEach(checkbox => checkbox.addEventListener('change', () => {
-        temp = checkbox.id
-        if (checkbox.checked) {
-            options[temp]["ans"] = "true"
+        //==================================================rendering explanation==================================
+        if ("{{question_data['Explanation']}}" == "" || "{{question_data['Explanation']}}" == " ") {
+            console.log("No Explanation")
         }
         else {
-            options[temp]["ans"] = "false"
-
-        }
-        document.getElementById("optids").value = JSON.stringify(options);
-
-
-    }
-    ));
-    //==========================================================multiple checkboxes boxes listener end====================
-    function validate(form) {
-
-        result = confirm("Are you sure to delete this file from the Question?")
-        if (result == true) {
-            return true
-
-
-        }
-        else {
-            return false
-        }
-    }
-    function validate_options(form) {
-
-
-        if (JSON.stringify(options) == '{}') {
-            alert("You have not added any Options!!!")
-            return false
-
-
-        }
-        else {
+            var exp = "{{question_data['Explanation']}}"
             var myEditor = document.querySelector('#editor_exp')
-            var html = myEditor.children[0].innerHTML
-            document.getElementById("ques_explanation").value = html;
-            return true
+            myEditor.children[0].innerHTML = document.getElementById("ques_explanation").value;
+
+
         }
-    }
-
-    //==================================================rendering explanation==================================
-    if ("{{question_data['Explanation']}}" == "" || "{{question_data['Explanation']}}" == " ") {
-        console.log("No Explanation")
-    }
-    else {
-        var exp = "{{question_data['Explanation']}}"
-        var myEditor = document.querySelector('#editor_exp')
-        myEditor.children[0].innerHTML = document.getElementById("ques_explanation").value;
+        //=========================================================================================================
 
 
-    }
-    //=========================================================================================================
-
-
-    user_selected_ques_categories = []
-    function htmlDecode(input) {
-        var doc = new DOMParser().parseFromString(input, "text/html");
-        return doc.documentElement.textContent;
-    }
-    function QuesCategories_() {
-        document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
-        a = confirm("Submit?")
-        if (a) {
-            return true
+        user_selected_ques_categories = []
+        function htmlDecode(input) {
+            var doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
         }
-        else {
-            return false
+        function QuesCategories_() {
+            document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
+            a = confirm("Submit?")
+            if (a) {
+                return true
+            }
+            else {
+                return false
+            }
         }
-    }
-    function filter_levels(elem) {
-        document.getElementById("question_level").value = elem.value
-    }
+        function filter_levels(elem) {
+            document.getElementById("question_level").value = elem.value
+        }
 
-    ques_category_data_div = document.createElement('div')
-    ques_category_data_div.style.display = "none"
-    ques_category_data_div.id = "div_ques_categories_specific"
-    ques_category_data_div.innerHTML = htmlDecode("{{category_list_string}}")
-    document.getElementById('ques_categories_encoded_data').appendChild(ques_category_data_div)
-    jk = document.querySelectorAll("#div_ques_categories_specific > div > span")
-    ques_categories_array = []
-    for (let i = 0; i < jk.length; i++) {
-        ques_categories_array.push(jk[i].innerText)
-    }
+        ques_category_data_div = document.createElement('div')
+        ques_category_data_div.style.display = "none"
+        ques_category_data_div.id = "div_ques_categories_specific"
+        ques_category_data_div.innerHTML = htmlDecode("{{category_list_string}}")
+        document.getElementById('ques_categories_encoded_data').appendChild(ques_category_data_div)
+        jk = document.querySelectorAll("#div_ques_categories_specific > div > span")
+        ques_categories_array = []
+        for (let i = 0; i < jk.length; i++) {
+            ques_categories_array.push(jk[i].innerText)
+        }
 
-    for (let i = 0; i < jk.length; i++) {
-        ques_categories_array.push()
-        document.getElementById("ques_category_checkboxes").innerHTML += `<div class="form-check">
+        for (let i = 0; i < jk.length; i++) {
+            ques_categories_array.push()
+            document.getElementById("ques_category_checkboxes").innerHTML += `<div class="form-check">
         <input class="form-check-input qcopt" type="checkbox" value="${jk[i].innerText}" id="flexCheckDefault">
         <label class="form-check-label" for="flexCheckDefault">
           ${jk[i].innerText}
         </label>
       </div>`
-    }
-
-    var checkboxes_ques_ctegory = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]');
-    checkboxes_ques_ctegory.forEach(checkbox_ques_ctegory => checkbox_ques_ctegory.addEventListener('change', () => {
-
-        if (checkbox_ques_ctegory.checked) {
-            user_selected_ques_categories.push(checkbox_ques_ctegory.value)
-            document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
-        }
-        else {
-            _index = user_selected_ques_categories.indexOf(checkbox_ques_ctegory.value)
-            if (_index != -1) {
-                user_selected_ques_categories.splice(_index, 1)
-            }
-
-            document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
-
         }
 
+        var checkboxes_ques_ctegory = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]');
+        checkboxes_ques_ctegory.forEach(checkbox_ques_ctegory => checkbox_ques_ctegory.addEventListener('change', () => {
 
-
-    }
-    ));
-    function imageUploaded() {
-        var file = document.querySelector(
-            'input[type=file]')['files'][0];
-        var reader = new FileReader();             
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                base64String = reader.result;
-                document.getElementById("question_pic").value = base64String
-                document.getElementById('fileId').value = ""
-
-        
-         
+            if (checkbox_ques_ctegory.checked) {
+                user_selected_ques_categories.push(checkbox_ques_ctegory.value)
+                document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
             }
-            
+            else {
+                _index = user_selected_ques_categories.indexOf(checkbox_ques_ctegory.value)
+                if (_index != -1) {
+                    user_selected_ques_categories.splice(_index, 1)
+                }
 
-    
-}
+                document.getElementById("ques_specific_categories_htmldata").value = user_selected_ques_categories
 
-    lkhm = htmlDecode("{{question_data['Categories_Data_Array']}}");
-    try {
-        jkhg = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]')
-        for (let i = 0; i < jkhg.length; i++) {
-            if (lkhm.includes(jkhg[i].value)) {
-                user_selected_ques_categories.push(jkhg[i].value)
-                jkhg[i].checked = true
+            }
+
+
+
+        }
+        ));
+
+
+        lkhm = htmlDecode("{{question_data['Categories_Data_Array']}}");
+        try {
+            jkhg = document.querySelectorAll('input[type=checkbox][class="form-check-input qcopt"]')
+            for (let i = 0; i < jkhg.length; i++) {
+                if (lkhm.includes(jkhg[i].value)) {
+                    user_selected_ques_categories.push(jkhg[i].value)
+                    jkhg[i].checked = true
+                }
             }
         }
-    }
-    catch (err) {
-    }
+        catch (err) {
+        }
 
 
-</script>
+    </script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
 
 </html>
