@@ -455,7 +455,8 @@
     <!-- <form action="/upload/{{chapter_key}}/{{question_key}}" class="dropzone" id="my-dropzone" method="POST"> -->
     <form action="/upload/{{chapter_key}}/{{question_key}}" method="post" enctype="multipart/form-data">
         <div class="form-group my-2">
-            <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="">
+            <input type="text" id="question_pic" name="base64data" style="display: none;">
+            <input class="btn btn-info" style="border-radius:15px" type="file" name="files" id="" onchange="imageUploaded()">
             <input class="btn btn-primary" type="submit" value="Submit">
             <!-- <button type="submit" class="btn btn-primary contri_btn" style="float:left;">UPLOAD &
                 SAVE</button> -->
@@ -519,33 +520,7 @@
         theme: 'snow'
     });
 </script>
-<script type="text/javascript">
 
-    /*Dropzone.options.myDropzone = {
-        addRemoveLinks: true,
-        autoProcessQueue: false,
-        maxFilesize: 8,
-        uploadMultiple: true,
-        parallelUploads: 10,
-        maxFiles: 10,
-        init: function () {
-            myDropzone = this;
-            this.element.querySelector("button[type=submit]").addEventListener("click", function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                myDropzone.processQueue();
-
-            });
-            myDropzone.on("complete", function (file) {
-                myDropzone.removeFile(file);
-                window.location.reload()
-            });
-
-            //fileCountOnServer = 2; // The number of files already uploaded
-            //myDropzone.options.maxFiles = myDropzone.options.maxFiles - fileCountOnServer;
-        }
-    };*/
-</script>
 <script defer>
 
 
@@ -907,6 +882,23 @@
 
     }
     ));
+    function imageUploaded() {
+        var file = document.querySelector(
+            'input[type=file]')['files'][0];
+        var reader = new FileReader();             
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                base64String = reader.result;
+                document.getElementById("question_pic").value = base64String
+                document.getElementById('fileId').value = ""
+
+        
+         
+            }
+            
+
+    
+}
 
     lkhm = htmlDecode("{{question_data['Categories_Data_Array']}}");
     try {
