@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+
+<body>
+    <a href = "/dashboard" class="btn btn-primary mx-2">BACK</a>
+<h1 class="text-center">{{friend_name}}</h1>
+
+    <div id="qqww">
+
+    </div>
+    <form action="" onsubmit="return mySubmitFunction(event)">
+        <input type="text" id="entrybox">
+        <button type="submit" onclick="send()">Send</button>
+    </form>
+    <input type="file" name="" id="fileId" accept="image/*">
+    <button type="submit" onclick="imageUploaded()">Send Pic</button>
+
+
+
+
+    <script src="./imp.js"></script>
+    <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js></script>
+    <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js></script>
+    <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-analytics.js></script>
+    <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-auth.js></script>
+    <script>
+        let person = "{{user_name}}"
+        document.title = person
+        var firebaseConfig = {
+            apiKey: "AIzaSyDO2W0QCmFCo0a-PTsT7ficA_QLI5e_WHg",
+            authDomain: "chat-a7bab.firebaseapp.com",
+            projectId: "chat-a7bab",
+            storageBucket: "chat-a7bab.appspot.com",
+            messagingSenderId: "550345253145",
+            appId: "1:550345253145:web:c6f493380c62bed2d02588",
+            measurementId: "G-R8DG3WGW88"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var MobileNumber = firebase.database().ref("Users").child("{{user_uid}}").child("friends").child("{{friend_uid}}").child("{{friend_uid}}")
+        MobileNumber.on('child_added', (snapshot) => {
+            console.log(snapshot.val())
+            if (snapshot.val()['type'] == 'img') {
+
+                document.getElementById("qqww").innerHTML += `<img class="img_msg" src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`
+            }
+            else {
+
+                document.getElementById("qqww").innerHTML += `<h3 class="msg" >${snapshot.val()['chat']}</h3>`
+            }
+
+            })
+
+
+        function send() {
+            let CallClicks_New = firebase.database().ref("Users").child("{{user_uid}}").child("friends").child("{{friend_uid}}").child("{{friend_uid}}");
+            CallClicks_New.push({
+                chat: person + ': ' + document.getElementById('entrybox').value,
+                type: 'text',
+                name: person
+            });
+            let f_CallClicks_New = firebase.database().ref("Users").child("{{friend_uid}}").child("friends").child("{{user_uid}}").child("{{user_uid}}");
+            f_CallClicks_New.push({
+                chat: person + ': ' + document.getElementById('entrybox').value,
+                type: 'text',
+                name: person
+            });
+            //document.getElementById("qqww").innerHTML += `<h3>${person + ': ' + document.getElementById('entrybox').value}</h3>`
+            document.getElementById('entrybox').value = ""
+        }
+        function imageUploaded() {
+            var file = document.querySelector(
+                'input[type=file]')['files'][0];
+            var reader = new FileReader();
+                reader.onload = function () {
+                    base64String = reader.result.replace("data:", "")
+                        .replace(/^.+,/, "");
+
+                    imageBase64Stringsep = base64String;
+
+                    let CallClicks_New = firebase.database().ref("Users").child("{{user_uid}}").child("friends").child("{{friend_uid}}").child("{{friend_uid}}");
+                    CallClicks_New.push({
+                        chat: base64String,
+                        type: 'img',
+                        name: person
+                    });
+                    let fimg_CallClicks_New = firebase.database().ref("Users").child("{{friend_uid}}").child("friends").child("{{user_uid}}").child("{{user_uid}}");
+                    fimg_CallClicks_New.push({
+                        chat: base64String,
+                        type: 'img',
+                        name: person
+                    });
+                    document.getElementById('fileId').value = ""
+
+         
+                    //document.getElementById("qqww").innerHTML += `<img src="data:image/png;base64,${base64String}"  width = 300 height = 300><br>`
+                }
+                reader.readAsDataURL(file);
+            
+        }
+        function mySubmitFunction() {
+            return false
+        }
+    </script>
+</body>
+
+</html>
