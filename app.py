@@ -37,8 +37,8 @@ def index():
             friends_list = db.child("Users").child(user_['localId']).child("friends").get()
             resp = make_response(render_template("dashboard.html",friends_list =friends_list,handle_catch = handle_catch ))
             # resp.set_cookie('framework', 'flask')
-            resp.set_cookie('__user__', user_['localId'])
-            resp.set_cookie('__email__', user_['email'])
+            resp.set_cookie('__user__', user_['localId'],max_age=60*60*24)
+            resp.set_cookie('__email__', user_['email'],max_age=60*60*24)
             # session['user'] = user_['localId']
             # session['email'] = user_['email']
             # g.user  = session['user']
