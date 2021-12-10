@@ -131,9 +131,9 @@ def addfriend():
         return redirect(url_for('dashboard')) 
     return redirect(url_for('dashboard')) 
 
-@app.route("/<string:friend_uid>/",methods = ['GET','POST'])
+@app.route("/<string:friend_uid>/",methods = ['GET'])
 def chat(friend_uid):
-    if request.method == 'POST':
+    if request.cookies.get('__user__') != None and request.cookies.get('__email__') != None:
         user_name = db.child('Users').child(request.cookies.get('__user__')).child("name").get().val()
         friends_name = db.child('Users').child(friend_uid).child("name").get().val()
         return render_template("chat.html",user_uid = request.cookies.get('__user__'),friend_uid = friend_uid,user_name = user_name,friend_name =friends_name )
