@@ -1,37 +1,121 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Slab|Lekton" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <title>Message Details</title>
 </head>
 
-<body>
-    <a href = "/dashboard" class="btn btn-primary mx-2">BACK</a>
-<h1 class="text-center">{{friend_name}}</h1>
+<body style="height: 100vh;">
+    <div class="container-fluid" style="height: 100%;">
+        <div class="row" style="height: 100%;">
+            <div class="col-md-12 right-body px-0 px-md-5 bg-dark" style="height: 100%;">
+                <div class="d-flex flex-column">
+                    <!-- Contact header and other options -->
+                    <div class="d-flex bg-primary text-white border border-secondary px-1 px-md-3">
+                        <div class="profile-pic">
+                            <a class="navbar-brand" href="#">
+                                <img class="rounded-circle" src="../static/img/admin.jfif" style="width: 50px;">
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center h5 mb-0">
+                            <p class="mb-0">{{friend_name}}</p>
+                        </div>
+                        <ul class="list-unstyled list-inline ml-auto my-auto nav-icons h5">
+                            <li class="list-inline-item mr-2 mr-sm-3"><a href="#" title="Search"><i class="fas fa-search"></i></a></li>
+                            <li class="list-inline-item mr-2 mr-sm-3"><a href="#" title="Call"><i class="fas fa-phone"></i></a></li>
+                            <li class="list-inline-item mr-2 mr-sm-3">
+                                
+                                <div class="dropdown">
+                                    <a href="#" class="dropdown-toggle" id="nav-dropdown-menu" data-toggle="dropdown" title="More Options">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="nav-dropdown-menu">
+                                        <a class="dropdown-item disabled" href="#">View Contact</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item disabled" href="#">Mute Notifications</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item disabled" href="#">Block</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item disabled" href="#">Clear Chat</a>
+                                    </div>
+                                </div>
 
-    <div id="qqww">
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- end of contact info -->
+                    
+                </div>
 
+                <div id="message-body-id" class="message-body" style="height: calc(100% - 135px);">
+                    <div class="px-3 py-3" id="message-body-id-inner">
+                        <!-- <div class="m-received">
+                            <div class="message">
+                                <p>Hi! You there?</p>
+             
+                            </div>
+                        </div>
+                        <div class="m-sent clearfix">
+                            <div class="message float-right">
+                                <p>Yup!</p>
+                                <div class="msg-timestamp d-flex flex-nowrap">
+                      
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-sent clearfix">
+                            <div class="message float-right">
+                                <img src="static/img/admin.jfif" alt="" width = "200" height="200">
+                                <div class="msg-timestamp d-flex flex-nowrap">
+                             
+                                </div>
+                            </div>
+                        </div> -->
+
+                    </div>
+                </div>
+          
+                <!-- Send text bar at bottom -->
+                <form action="" onsubmit="return mySubmitFunction(event)">
+                <div class="d-flex bg-light py-3 border border-secondary">
+                    <div class="col-1 mb-0 h4 d-flex align-items-center justify-content-center">
+                        <a href="#"><span><i class="fas fa-smile-wink"></i></span></a>
+                    </div>
+                    <div class="input-group md-form form-sm form-2 pl-0">
+                        <input class="form-control my-0 py-1 red-border" id="entrybox" type="text" placeholder="Type to send" aria-label="Search">
+                        <div class="input-group-append">
+                           <button type="submit" onclick="send()" style="cursor: pointer;"> <span class="input-group-text red lighten-3" id="basic-text1"><i class="fas fa-play"></i></span></button>
+                        </div>
+                    </div>
+                    <div class="col-1 mb-0 h4 d-flex align-items-center justify-content-center">
+                        <button onclick="Choose_Image()" style="cursor: pointer;"><span><i class="fas fa-image"></i></span></button>
+                        <input type="file" name="" id="Image_fileId" accept="image/*" style = "display: none;"  onchange="imageUploaded()">
+                    </div>
+                </div>
+            </form>
+
+            </div>
+        </div>
     </div>
-    <form action="" onsubmit="return mySubmitFunction(event)">
-        <input type="text" id="entrybox">
-        <button type="submit" onclick="send()">Send</button>
-    </form>
-    <input type="file" name="" id="fileId" accept="image/*">
-    <button type="submit" onclick="imageUploaded()">Send Pic</button>
-
-
-
-
-    <script src="./imp.js"></script>
+   
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js></script>
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js></script>
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-analytics.js></script>
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-auth.js></script>
+
+
     <script>
         let person = "{{user_name}}"
         document.title = person
@@ -48,15 +132,58 @@
         var MobileNumber = firebase.database().ref("Users").child("{{user_uid}}").child("friends").child("{{friend_uid}}").child("{{friend_uid}}")
         MobileNumber.on('child_added', (snapshot) => {
             console.log(snapshot.val())
-            if (snapshot.val()['type'] == 'img') {
-
-                document.getElementById("qqww").innerHTML += `<img class="img_msg" src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`
+            if(snapshot.val()['name']=="{{user_name}}"){
+                
+                if (snapshot.val()['type'] == 'img') {
+    
+                    /*document.getElementById("message-body-id").innerHTML += `<img class="img_msg" src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`*/
+                    document.getElementById("message-body-id-inner").innerHTML += `<div class="m-sent clearfix">
+                        <div class="message float-right">
+                            <img src="data:image/png;base64,${snapshot.val()['chat']}" alt="" width = "200" height="200">
+                            <div class="msg-timestamp d-flex flex-nowrap">
+                                <!-- <small class="text-muted"><i class="fas fa-check-double text-primary"></i> 08:00</small class="text-muted"> -->
+                            </div>
+                        </div>
+                    </div>`
+           
+                }
+                else {
+    
+                    /*document.getElementById("message-body-id").innerHTML += `<h3 class="msg" >${snapshot.val()['chat']}</h3>`*/
+                    document.getElementById("message-body-id-inner").innerHTML += `<div class="m-sent clearfix">
+                        <div class="message float-right">
+                            <p>${snapshot.val()['chat']}</p>
+                            <div class="msg-timestamp d-flex flex-nowrap">
+                               
+                            </div>
+                        </div>
+                    </div>`
+                }
             }
-            else {
-
-                document.getElementById("qqww").innerHTML += `<h3 class="msg" >${snapshot.val()['chat']}</h3>`
+            else{
+                if (snapshot.val()['type'] == 'img') {
+    
+                    /*document.getElementById("message-body-id").innerHTML += `<img class="img_msg" src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`*/
+                    document.getElementById("message-body-id-inner").innerHTML += `<div class="m-received">
+                        <div class="message">
+                            <img src="data:image/png;base64,${snapshot.val()['chat']}" alt="" width = "200" height="200">
+                            
+                        </div>
+                    </div>`
+           
+                }
+                else {
+    
+                    /*document.getElementById("message-body-id").innerHTML += `<h3 class="msg" >${snapshot.val()['chat']}</h3>`*/
+                    document.getElementById("message-body-id-inner").innerHTML += `<div class="m-received">
+                        <div class="message">
+                            <p>${snapshot.val()['chat']}</p>
+                           
+                        </div>
+                    </div>`
+                }
             }
-
+             bottom()
             })
 
 
@@ -109,7 +236,23 @@
         function mySubmitFunction() {
             return false
         }
+        function bottom() {
+            var elem = document.getElementById('message-body-id');
+            elem.scrollTop = elem.scrollHeight;
+          
+        };
+        function Choose_Image(){
+            document.getElementById('Image_fileId').click()
+        }
     </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="static/script.js"></script>
+  
 </body>
 
 </html>
