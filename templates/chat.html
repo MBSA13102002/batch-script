@@ -18,9 +18,12 @@
 </head>
 
 <body style="height: 100vh;">
+    {% macro catch(on_exception) %}
+    {{ handle_catch(caller, on_exception) }}
+    {% endmacro %}
     <div class="container-fluid" style="height: 100%;">
         <div class="row" style="height: 100%;">
-            <div class="col-md-12 right-body px-0 px-md-5 bg-light" style="height: 100%;">
+            <div class="col-md-12 right-body px-0 px-md-5 bg-dark" style="height: 100%;">
                 <div class="d-flex flex-column">
                     <!-- Contact header and other options -->
                     <div class="d-flex bg-primary text-white border border-secondary px-1 px-md-3">
@@ -33,8 +36,7 @@
                             <p class="mb-0">{{friend_name}}</p>
                         </div>
                         <ul class="list-unstyled list-inline ml-auto my-auto nav-icons h5">
-                            <li class="list-inline-item mr-2 mr-sm-3"><a href="#" title="Search"><i class="fas fa-search"></i></a></li>
-                            <li class="list-inline-item mr-2 mr-sm-3"><a href="#" title="Call"><i class="fas fa-phone"></i></a></li>
+                            <li class="list-inline-item mr-2 mr-sm-3"><a href="#" title="Search" data-toggle="modal" data-target="#status-modal"><i class="fas fa-share"></i></a></li>
                             <li class="list-inline-item mr-2 mr-sm-3">
                                 
                                 <div class="dropdown">
@@ -109,7 +111,53 @@
             </div>
         </div>
     </div>
-   
+
+
+    <div class="modal fade" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="status-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content bg-info text-white">
+            <div class="modal-header">
+              <h5 class="modal-title" id="status-modal-label">Forward the message</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% call catch('') %}
+            <div class="modal-body text-center">
+                <form action="/forward" method = "POST" onsubmit="return Verify()">
+                {% for item in friends_list.each()%}
+                
+                    <div class="d-flex chat">
+                        <!-- sender avatar -->
+                        <div class="">
+                            <img src="../static/img/admin.jfif" class="rounded-circle" style="width: 55px;">
+                        </div>
+                        <div class="d-flex flex-column justify-content-center mx-2">
+                            <button type = "submit" class = "btn" onclick = "Change_Friend(`{{item.key()}}`)"><span class="font-weight-bold">{{item.val()['name']}}</span></button>
+                            <div class="">
+                               
+                            </div>
+                        </div>
+                        <div class="ml-auto">
+                
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <input type="text" id ="all_forwarded_Messages" name ="all_forwarded_Messages" style="display: none;">
+                    <input type="text" id ="friend_to_be_forwarded" name ="friend_to_be_forwarded" style="display: none;">
+                </form>
+                             
+                    
+            </div>
+            {% endcall %}
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js></script>
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js></script>
     <script src=https://www.gstatic.com/firebasejs/8.7.0/firebase-analytics.js></script>
@@ -117,6 +165,7 @@
 
 
     <script>
+        var Forward_Messages = {}
         let person = "{{user_name}}"
         document.title = person
         var firebaseConfig = {
@@ -139,6 +188,7 @@
                     /*document.getElementById("message-body-id").innerHTML += `<img class="img_msg" src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`*/
                     document.getElementById("message-body-id-inner").innerHTML += `<div class="m-sent clearfix">
                         <div class="message float-right">
+                            <input class = ${"{{user_uid}}"} type="checkbox" name="" id="" style="float: right;" value = "${snapshot.val()['chat']}" message_type = "${snapshot.val()['type']}" key = "${snapshot.key}">
                             <img src="data:image/png;base64,${snapshot.val()['chat']}" alt="" width = "200" height="200">
                             <div class="msg-timestamp d-flex flex-nowrap">
                                 <!-- <small class="text-muted"><i class="fas fa-check-double text-primary"></i> 08:00</small class="text-muted"> -->
@@ -152,6 +202,7 @@
                     /*document.getElementById("message-body-id").innerHTML += `<h3 class="msg" >${snapshot.val()['chat']}</h3>`*/
                     document.getElementById("message-body-id-inner").innerHTML += `<div class="m-sent clearfix">
                         <div class="message float-right">
+                            <input class = ${"{{user_uid}}"} type="checkbox" name="" id="" style="float: right;" value = "${snapshot.val()['chat']}" message_type = "${snapshot.val()['type']}" key = "${snapshot.key}">
                             <p>${snapshot.val()['chat']}</p>
                             <div class="msg-timestamp d-flex flex-nowrap">
                                
@@ -166,6 +217,7 @@
                     /*document.getElementById("message-body-id").innerHTML += `<img class="img_msg" src="data:image/png;base64,${snapshot.val()['chat']}"  width = 300 height = 300><br>`*/
                     document.getElementById("message-body-id-inner").innerHTML += `<div class="m-received">
                         <div class="message">
+                            <input class = ${"{{friend_uid}}"} type="checkbox" name="" id="" style="float: right;" value = "${snapshot.val()['chat']}" message_type = "${snapshot.val()['type']}" key = "${snapshot.key}">
                             <img src="data:image/png;base64,${snapshot.val()['chat']}" alt="" width = "200" height="200">
                             
                         </div>
@@ -177,11 +229,33 @@
                     /*document.getElementById("message-body-id").innerHTML += `<h3 class="msg" >${snapshot.val()['chat']}</h3>`*/
                     document.getElementById("message-body-id-inner").innerHTML += `<div class="m-received">
                         <div class="message">
+                            <input class = ${"{{friend_uid}}"} type="checkbox" name="" id="" style="float: right;" value = "${snapshot.val()['chat']}" message_type = "${snapshot.val()['type']}" key = "${snapshot.key}">
                             <p>${snapshot.val()['chat']}</p>
                            
                         </div>
                     </div>`
                 }
+            }
+            var checkbox = document.querySelectorAll("input[type=checkbox]");
+            for(let i = 0;i<checkbox.length;i++){
+            
+                checkbox[i].addEventListener('change', function() {
+                  if (this.checked) {
+                    Forward_Messages[this.getAttribute('key')] = {
+                        'type': this.getAttribute("message_type"),
+                        'chat': this.value,
+                        'name' : "{{user_name}}"
+                    }
+                   
+                    console.log(Forward_Messages)
+             
+                } else {
+                     delete Forward_Messages[this.getAttribute("key")]
+                   
+                     console.log(Forward_Messages)
+                    
+                  }
+                });
             }
              bottom()
             })
@@ -202,6 +276,7 @@
             });
             //document.getElementById("qqww").innerHTML += `<h3>${person + ': ' + document.getElementById('entrybox').value}</h3>`
             document.getElementById('entrybox').value = ""
+            
         }
         function imageUploaded() {
             var file = document.querySelector(
@@ -244,8 +319,20 @@
         function Choose_Image(){
             document.getElementById('Image_fileId').click()
         }
-    </script>
+        function Change_Friend(uid){
+            document.getElementById("all_forwarded_Messages").value = JSON.stringify(Forward_Messages)
+        document.getElementById("friend_to_be_forwarded").value = uid;
+         
+        }
+        function Verify(){
 
+            return true;
+        }
+    </script>
+    <script>
+        
+
+    </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
