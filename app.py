@@ -137,6 +137,28 @@ def chat(friend_uid):
         user_name = db.child('Users').child(request.cookies.get('__user__')).child("name").get().val()
         friends_name = db.child('Users').child(friend_uid).child("name").get().val()
         return render_template("chat.html",user_uid = request.cookies.get('__user__'),friend_uid = friend_uid,user_name = user_name,friend_name =friends_name )
+    
+@app.route('/forward',methods = ['GET','POST'])
+def forward_mssg():
+    if request.method == 'POST':
+        all_mssg_str = request.form.get("all_forwarded_Messages")
+        friend_to_be_forwarded = request.form.get("friend_to_be_forwarded")
+        data = json.loads(all_mssg_str)
+        for key,value in data.items():
+            db.child('Users').child(friend_to_be_forwarded).child("friends").child(request.cookies.get('__user__')).child(request.cookies.get('__user__')).push({
+                'chat':value['chat'],
+                'type':value['type'],
+                'name':value['name']
+
+            })
+            db.child('Users').child(request.cookies.get('__user__')).child("friends").child(friend_to_be_forwarded).child(friend_to_be_forwarded).push({
+                'chat':value['chat'],
+                'type':value['type'],
+                'name':value['name']
+
+            })
+        # return render_template("painter.html")
+        return redirect(url_for('chat',friend_uid = friend_to_be_forwarded))
 # @app.before_request
 # def before_request():
 #     g.user = None
