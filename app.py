@@ -35,7 +35,7 @@ def index():
         try:
             user_ = auth.sign_in_with_email_and_password(uname ,upass)
             friends_list = db.child("Users").child(user_['localId']).child("friends").get()
-            resp = make_response(render_template("dashboard.html",friends_list =friends_list,handle_catch = handle_catch ))
+            resp = make_response(render_template("friend_list.html",friends_list =friends_list,handle_catch = handle_catch ))
             # resp.set_cookie('framework', 'flask')
             resp.set_cookie('__user__', user_['localId'],max_age=60*60*24)
             resp.set_cookie('__email__', user_['email'],max_age=60*60*24)
@@ -49,16 +49,15 @@ def index():
     
     if request.cookies.get('__user__')is not None and request.cookies.get('__email__') is not None:
         friends_list = db.child("Users").child(request.cookies.get('__user__')).child("friends").get()
-        return render_template("dashboard.html",friends_list =friends_list,handle_catch = handle_catch )
+        return render_template("friend_list.html",friends_list =friends_list,handle_catch = handle_catch )
 
     return render_template("index.html")
-
 @app.route('/dashboard')
 def dashboard():
     if request.cookies.get('__user__') != None and request.cookies.get('__email__') != None:
         # return render_template("dashboard_temp.html")
         friends_list = db.child("Users").child(request.cookies.get('__user__')).child("friends").get()
-        return render_template("dashboard.html",friends_list =friends_list,handle_catch = handle_catch )
+        return render_template("friend_list.html",friends_list =friends_list,handle_catch = handle_catch )
     return redirect(url_for('index'))
 
 @app.route("/drop",methods=['GET','POST'])
@@ -136,8 +135,10 @@ def chat(friend_uid):
     if request.cookies.get('__user__') != None and request.cookies.get('__email__') != None:
         user_name = db.child('Users').child(request.cookies.get('__user__')).child("name").get().val()
         friends_name = db.child('Users').child(friend_uid).child("name").get().val()
-        return render_template("chat.html",user_uid = request.cookies.get('__user__'),friend_uid = friend_uid,user_name = user_name,friend_name =friends_name )
-    
+        friends_list = db.child("Users").child(request.cookies.get('__user__')).child("friends").get()
+        return render_template("message.html",user_uid = request.cookies.get('__user__'),friend_uid = friend_uid,user_name = user_name,friend_name =friends_name,friends_list =friends_list,handle_catch = handle_catch )
+    return render_template("message.html")
+
 @app.route('/forward',methods = ['GET','POST'])
 def forward_mssg():
     if request.method == 'POST':
