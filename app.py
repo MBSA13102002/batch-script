@@ -56,7 +56,7 @@ def index():
         friends_list = db.child("Users").child(request.cookies.get('__user__')).child("friends").get()
         return render_template("friend_list.html",friends_list =friends_list,handle_catch = handle_catch )
 
-    return render_template("index.html",res_code = res_code)
+    return render_template("index.html")
 @app.route('/dashboard')
 def dashboard():
     if request.cookies.get('__user__') != None and request.cookies.get('__email__') != None:
