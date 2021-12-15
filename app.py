@@ -44,8 +44,13 @@ def index():
             # g.user  = session['user']
 
             return resp
-        except:
-            return redirect(url_for('dashboard'))
+       except Exception  as e:
+            mes_code = json.loads(e.args[1])['error']['message']
+            if(mes_code == "INVALID_PASSWORD"):
+                res_code = 500
+            elif(mes_code == "EMAIL_NOT_FOUND"):
+                res_code = 502
+            return render_template("index.html",res_code = res_code)
     
     if request.cookies.get('__user__')is not None and request.cookies.get('__email__') is not None:
         friends_list = db.child("Users").child(request.cookies.get('__user__')).child("friends").get()
