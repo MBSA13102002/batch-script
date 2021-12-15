@@ -84,6 +84,17 @@ body {
   <body class="text-center">
     
 <main class="form-signin" style="border: 2px solid black">
+    {% if res_code == 500 %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+     <strong>Invalid Password!!</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% elif res_code == 502  %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+     <strong>User doesn't exist!!!</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
   <form action="/" method="post">
     <img class="mb-4" src="static/img/admin.jfif" alt="" width="100" height="100">
     <h1 class="h3 mb-3 fw-normal">SIGN IN</h1>
