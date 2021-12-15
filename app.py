@@ -44,7 +44,7 @@ def index():
             # g.user  = session['user']
 
             return resp
-       except Exception  as e:
+        except Exception  as e:
             mes_code = json.loads(e.args[1])['error']['message']
             if(mes_code == "INVALID_PASSWORD"):
                 res_code = 500
