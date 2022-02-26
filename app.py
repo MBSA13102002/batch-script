@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/hackverse",methods = ['POST'])
 def start():
-    if request.methods == 'POST':
+    if request.method == 'POST':
         data = {
             'key':'MBSAIADITYA',
             'value':{
