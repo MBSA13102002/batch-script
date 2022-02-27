@@ -1,0 +1,266 @@
+{
+  "1":{"shoulders":{
+    "0":{
+        "Ylnk":"https://youtu.be/XR0xeuK5zBU",
+        "N_Exercise":"Jumping Jacks",
+        "Eid":29051
+    },
+    "1":{
+        "Ylnk":"https://youtu.be/i_vx_I9-v6U",
+        "N_Exercise":"Arm Raises",
+        "Eid":50916
+    },
+    "2":{
+        "Ylnk":"https://youtu.be/DEyDbzSudEU",
+        "N_Exercise":"Rhomboid Pulls",
+        "Eid":65518
+    },
+    "3":{
+        "Ylnk":"https://youtu.be/Rr43jMaoJ9g",
+        "N_Exercise":"Prone Tricep Push-ups",
+        "Eid":12263
+    },
+    "4":{
+        "Ylnk":"https://youtu.be/geNkbcZ6qDo",
+        "N_Exercise":"Floor Tricep Dips",
+         "Eid":35729
+    },
+    "5":{
+        "Ylnk":"https://youtu.be/6wdVoBSkU0Y",
+        "N_Exercise":"Hover Push-ups",
+         "Eid":31099
+    },
+    "6":{
+        "Ylnk":"https://youtu.be/HT4G-uWcVcc",
+        "N_Exercise":"Pike Push-ups",
+         "Eid":55152
+    },
+    "7":{
+        "Ylnk":"https://youtu.be/kqnua4rHVVA",
+        "N_Exercise":"Cat Cow Stretch",
+         "Eid":82901
+    },
+    "8":{
+        "Ylnk":"https://youtu.be/qYvYsFrTI0U",
+        "N_Exercise":"Child's Pose",
+         "Eid":19072
+    },
+    "9":{
+        "Ylnk":"https://youtu.be/VSp0z7Mp5IU",
+        "N_Exercise":"Inchworms",
+         "Eid":74593
+    }
+  }},
+    "2":{"arms":{
+      "0":{
+          "Ylnk":"https://youtu.be/XR0xeuK5zBU",
+          "N_Exercise":"Jumping Jacks",
+           "Eid":57610
+      },
+      "1":{
+          "Ylnk":"https://youtu.be/i_vx_I9-v6U",
+          "N_Exercise":"Arm Raises",
+           "Eid":81750
+      },
+      "2":{
+          "Ylnk":"https://youtu.be/pD3mD6WgykM",
+          "N_Exercise":"Diamond Push-Ups",
+           "Eid":46285
+      },
+      "3":{
+          "Ylnk":"https://youtu.be/CYGeazlNbU4",
+          "N_Exercise":"Skipping Without Rope",
+           "Eid":23841
+      },
+      "4":{
+          "Ylnk":"https://youtu.be/wiyvVpEKOsc",
+          "N_Exercise":"Alternating Hooks",
+           "Eid":29633
+      },
+      "5":{
+          "Ylnk":"https://youtu.be/SIXuGSOL3_8",
+          "N_Exercise":"Push-Up & Rotation",
+           "Eid":22243
+      },
+      "6":{
+          "Ylnk":"https://youtu.be/SaZK9vlSmHI",
+          "N_Exercise":"Triceps Stretch",
+           "Eid":26987
+      },
+      "7":{
+          "Ylnk":"https://youtu.be/wS4OsJ4yzx4",
+          "N_Exercise":"Burpees",
+           "Eid":29728
+      },
+      "8":{
+          "Ylnk":"https://youtu.be/pxsOe8MJq68",
+          "N_Exercise":"Arm Curls Crunch",
+           "Eid":79550
+      },
+      "9":{
+          "Ylnk":"https://youtu.be/geNkbcZ6qDo",
+          "N_Exercise":"Floor Tricep Dips",
+           "Eid":47872
+      }
+    }},
+    "3":{"legs":{
+      "0":{
+          "Ylnk":"https://youtu.be/nYmUEJIBj3c",
+          "N_Exercise":"Side Hops",
+           "Eid":92492
+      },
+      "1":{
+          "Ylnk":"https://youtu.be/YaXPRqUwItQ",
+          "N_Exercise":"Squats",
+           "Eid":94936
+      },
+      "2":{
+          "Ylnk":"https://youtu.be/wrwwXE_x-pQ",
+          "N_Exercise":"Lunges",
+           "Eid":89469
+      },
+      "3":{
+          "Ylnk":"https://youtu.be/SJ1Xuz9D-ZQ",
+          "N_Exercise":"Donkey Kicks",
+           "Eid":83267
+      },
+      "4":{
+          "Ylnk":"https://youtu.be/XULOKw4E4P4",
+          "N_Exercise":"Wall Sit",
+           "Eid":45842
+      },
+      "5":{
+          "Ylnk":"https://youtu.be/wS4OsJ4yzx4",
+          "N_Exercise":"Burpees",
+           "Eid":90443
+      },
+      "6":{
+          "Ylnk":"https://youtu.be/kjlfpqXnyL8",
+          "N_Exercise":"Sumo Squat",
+           "Eid":80289
+      },
+      "7":{
+          "Ylnk":"https://youtu.be/VgysBPnVJWg",
+          "N_Exercise":"Side Leg Circles",
+           "Eid":11671
+      },
+      "8":{
+          "Ylnk":"https://youtu.be/dDNq-Bsjh5w",
+          "N_Exercise":"Prone Flutter Kicks",
+           "Eid":38284
+      },
+      "9":{
+          "Ylnk":"https://youtu.be/795rPzSVOd4",
+          "N_Exercise":"Wall Resting Single Leg Calf",
+           "Eid":91996
+      }
+    }},
+   "4":{ "abs":{
+        "0":{
+          "N_Exercise":"Flutter Kicks",
+          "Ylnk":"https://www.youtube.com/watch?v=ANVdMDaYRts",
+          "Eid":19695
+      },
+        "1":{
+          "N_Exercise":"Reaching Oblique Crunch",
+          "Ylnk":"https://www.youtube.com/watch?v=Z9WtuN50f9s",
+          "Eid":25572
+      },
+        "2":{
+          "N_Exercise":"Pilates Side Hip Raises",
+          "Ylnk":"https://www.youtube.com/watch?v=ZPf8jtTkRxI",
+          "Eid":56486
+      },
+        "3":{
+          "N_Exercise":"Russian Twists",
+          "Ylnk":"https://www.youtube.com/watch?v=wkD8rjkodUI",
+          "Eid":20315
+      },
+        "4":{
+          "N_Exercise":"Toe Touch Crunches",
+          "Ylnk":"https://www.youtube.com/watch?v=y6Bv_0Shhc8",
+          "Eid":78945
+      },
+        "5":{
+          "N_Exercise":"Pilates Leg Pulls(Facing up & down)",
+          "Ylnk":"https://www.youtube.com/watch?v=BTvniic_B9M",
+          "Eid":36985
+      },
+        "6":{
+          "N_Exercise":"Pilates Toe Taps",
+          "Ylnk":"https://www.youtube.com/watch?v=hlnfZBQwPaA",
+          "Eid":45623
+      },
+        "7":{
+          "N_Exercise":"Knee Tuck Crunches",
+          "Ylnk":"https://www.youtube.com/watch?v=MchxiuKaquY",
+          "Eid":12256
+      },
+        "8":{
+          "N_Exercise":"Plank",
+          "Ylnk":"https://www.youtube.com/watch?v=yeKv5oX_6GY",
+          "Eid":77523
+      },
+        "9":{
+          "N_Exercise":"Side Plank",
+          "Ylnk":"https://www.youtube.com/watch?v=XeN4pEZZJNI",
+          "Eid":23012
+      }
+    }},
+   "5":{ "chest":{
+        "0":{
+          "N_Exercise":"Standard Push-Ups",
+          "Ylnk":"https://www.youtube.com/watch?v=IODxDxX7oi4",
+          "Eid":17113
+      },
+        "1":{
+          "N_Exercise":"Wide Hands Push-Ups",
+          "Ylnk":"https://www.youtube.com/watch?v=rr6eFNNDQdU",
+          "Eid":90654
+        },
+
+        "2":{
+          "N_Exercise":"Clap Push-Ups",
+          "Ylnk":"https://www.youtube.com/watch?v=EYwWCgM198U",
+          "Eid":65475
+          
+      },
+        "3":{
+          "N_Exercise":"Chest Tap Push-Ups",
+          "Ylnk":"https://www.youtube.com/watch?v=AhdtowFDKT0",
+          "Eid":85379
+      },
+        "4":{
+          "N_Exercise":"Dumbbell Pullovers",
+          "Ylnk":"https://www.youtube.com/watch?v=5YStMv6m2g8",
+          "Eid":83753
+      },
+        "5":{
+          "N_Exercise":"Incline Dumbbell Press",
+          "Ylnk":"https://www.youtube.com/watch?v=0G2_XV7slIg",
+          "Eid":54852
+      },
+        "6":{
+          "N_Exercise":"Chest Flyes",
+          "Ylnk":"https://www.youtube.com/watch?v=QENKPHhQVi4",
+          "Eid":73344
+      },
+        "7":{
+          "N_Exercise":"Arm Crossovers",
+          "Ylnk":"https://www.youtube.com/watch?v=s0NwyisZvRM",
+          "Eid":60181
+      },
+        "8":{
+          "N_Exercise":"Wall Pulses",
+          "Ylnk":"https://www.youtube.com/watch?v=CWfEYvfp3fc",
+          "Eid":55702
+      },
+        "9":{
+          "N_Exercise":"Ups & Down",
+          "Ylnk":"https://www.youtube.com/watch?v=6v6IsZcvqCA",
+          "Eid":55656
+      }
+    }
+  }
+
+}
