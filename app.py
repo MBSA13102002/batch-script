@@ -13,6 +13,7 @@ def calc_cal_per_day(age,weight,height,gender):
 
 model = load("Predictor_Velvets.joblib")
 @app.route("/hackverse",methods = ['POST'])
+@cross_origin()
 def start():
     if request.method == 'POST':
         age = float(request.json["age"])
