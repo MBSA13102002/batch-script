@@ -41,13 +41,7 @@ def start():
             comment = "You need to raise your Weight!!!"
         Actual_BF_precent = list(model.predict([[age,gender,height_cm,weight_kg]]))[0]
         Ideal_BF_precent = list(model.predict([[age,gender,height_cm,Ideal_Weight]]))[0]
-        for i in range(5):
-            id = random.randint(0,10)
-            data['shoulders'][str(i)] = data_json['1']['shoulders'][str(id)]
-            data['arms'][str(i)] = data_json['2']['arms'][str(id)]
-            data['legs'][str(i)] = data_json['3']['legs'][str(id)]
-            data['abs'][str(i)] = data_json['4']['abs'][str(id)]
-            data['chest'][str(i)] = data_json['5']['chest'][str(id)]
+
         data = {
             'bmi_actual':BMI_actual,
             'lower_weight':Lower_Weight,
@@ -74,5 +68,12 @@ def start():
 
             },
         }
+        for i in range(5):
+            id = random.randint(0,10)
+            data['shoulders'][str(i)] = data_json['1']['shoulders'][str(id)]
+            data['arms'][str(i)] = data_json['2']['arms'][str(id)]
+            data['legs'][str(i)] = data_json['3']['legs'][str(id)]
+            data['abs'][str(i)] = data_json['4']['abs'][str(id)]
+            data['chest'][str(i)] = data_json['5']['chest'][str(id)]
         return data
 
