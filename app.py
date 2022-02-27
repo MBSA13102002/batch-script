@@ -2,11 +2,7 @@
 from flask import Flask,request
 
 from joblib import load
-import random,json
 app = Flask(__name__)
-f = open('data.json')
- 
-data_json = json.load(f)
 
 def calc_cal_per_day(age,weight,height,gender):
     if gender == 1:
@@ -68,12 +64,5 @@ def start():
 
             }
         }
-        for i in range(5):
-            id = random.randint(0,10)
-            data['shoulders'][str(i)] = data_json['1']['shoulders'][str(id)]
-            data['arms'][str(i)] = data_json['2']['arms'][str(id)]
-            data['legs'][str(i)] = data_json['3']['legs'][str(id)]
-            data['abs'][str(i)] = data_json['4']['abs'][str(id)]
-            data['chest'][str(i)] = data_json['5']['chest'][str(id)]
         return data
 
