@@ -2,9 +2,11 @@
 from flask import Flask,request
 from flask_cors import CORS
 from joblib import load
-import random
+import random,json
 app = Flask(__name__)
-
+f = open('data.json')
+ 
+data_json = json.load(f)
 CORS(app)
 def calc_cal_per_day(age,weight,height,gender):
     if gender == 1:
