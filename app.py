@@ -1,13 +1,13 @@
 
 from flask import Flask,request
-from flask_cors import CORS
+
 from joblib import load
 import random,json
 app = Flask(__name__)
 f = open('data.json')
  
 data_json = json.load(f)
-CORS(app)
+
 def calc_cal_per_day(age,weight,height,gender):
     if gender == 1:
       cal_per_day = 66.4730+(13.7516 *weight)+(5.0033 *height)-(6.7550 *age)
@@ -66,7 +66,7 @@ def start():
             },
             'chest':{
 
-            },
+            }
         }
         for i in range(5):
             id = random.randint(0,10)
