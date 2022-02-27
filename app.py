@@ -1,5 +1,6 @@
 
 from flask import Flask,request
+from flask_cors import CORS
 from joblib import load
 app = Flask(__name__)
 CORS(app)
