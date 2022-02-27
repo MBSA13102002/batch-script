@@ -2,7 +2,7 @@
 from flask import Flask,request
 from joblib import load
 app = Flask(__name__)
-
+CORS(app)
 def calc_cal_per_day(age,weight,height,gender):
     if gender == 1:
       cal_per_day = 66.4730+(13.7516 *weight)+(5.0033 *height)-(6.7550 *age)
